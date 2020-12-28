@@ -30,6 +30,6 @@ public class Solution {
     }
 
     public static double getWeight(int earthWeight) {
-        return earthWeight * 17.0 / 100;
+        return earthWeight * 0.17;
     }
 }
