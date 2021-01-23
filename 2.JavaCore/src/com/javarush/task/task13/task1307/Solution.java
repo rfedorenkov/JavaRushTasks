@@ -13,7 +13,7 @@ package com.javarush.task.task13.task1307;
 */
 
 public class Solution {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
     }
 
     interface SimpleObject<T> {
