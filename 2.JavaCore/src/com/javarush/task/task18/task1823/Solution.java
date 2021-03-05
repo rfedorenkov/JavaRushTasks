@@ -29,7 +29,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
+
         while (true) {
             String file = scanner.nextLine();
             if ("exit".equals(file)) {
