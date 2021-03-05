@@ -29,10 +29,13 @@ public class Solution {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        String readLine;
-        while ((readLine = scanner.next()).equals("exit")) {
-            new ReadThread(readLine).start();
+        while (true) {
+            String file = scanner.nextLine();
+            if ("exit".equals(file)) {
+                scanner.close();
+                break;
+            }
+            new ReadThread(file);
         }
     }
 
