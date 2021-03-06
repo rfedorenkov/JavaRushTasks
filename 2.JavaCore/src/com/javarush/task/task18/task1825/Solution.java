@@ -37,7 +37,7 @@ public class Solution {
 
         while (true) {
             String filename = scanner.next();
-            if (filename.equals("end")) {
+            if ("end".equals(filename)) {
                 break;
             }
             fileParts.add(filename);
@@ -46,7 +46,7 @@ public class Solution {
         String[] split = fileParts.get(0).split("\\.");
         String fullFileName = split[0] + "." + split[1];
 
-        System.out.println(fullFileName);
+        Collections.sort(fileParts);
 
         try (FileOutputStream fos = new FileOutputStream(fullFileName)) {
             for (String filePart : fileParts) {
