@@ -20,7 +20,7 @@ package com.javarush.task.task19.task1901;
 
 public class Solution {
     public static void main(String[] args) {
-        //это пример вывода
+
         ATable aTable = new ATable() {
             @Override
             public String getCurrentUserName() {
