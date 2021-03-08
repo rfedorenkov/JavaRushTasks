@@ -38,7 +38,7 @@ public class Solution {
 
     }
 
-    public static class IncomeDataAdapter implements Customer, Contact {
+    public static class IncomeDataAdapter implements Contact, Customer {
 
         private final IncomeData data;
 
