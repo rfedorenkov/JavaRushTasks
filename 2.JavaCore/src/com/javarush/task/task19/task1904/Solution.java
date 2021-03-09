@@ -1,7 +1,5 @@
 package com.javarush.task.task19.task1904;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
@@ -34,12 +32,7 @@ import java.util.Scanner;
 public class Solution {
 
     public static void main(String[] args) {
-        try {
-            PersonScannerAdapter adapter = new PersonScannerAdapter(new Scanner(new FileReader("./1")));
-            System.out.println(adapter.read());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static class PersonScannerAdapter implements PersonScanner {
