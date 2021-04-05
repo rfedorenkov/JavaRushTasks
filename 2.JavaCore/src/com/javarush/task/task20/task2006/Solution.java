@@ -19,6 +19,8 @@ import java.util.List;
 
 public class Solution {
     public static class Human implements Serializable {
+        private static final long serialVersionUID = 4169250126993346006L;
+
         public String name;
         public List<String> assets = new ArrayList<>();
 
