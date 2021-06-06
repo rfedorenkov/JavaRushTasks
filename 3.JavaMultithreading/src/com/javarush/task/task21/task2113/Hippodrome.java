@@ -1,6 +1,7 @@
 package com.javarush.task.task21.task2113;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -26,6 +27,7 @@ public class Hippodrome {
                 e.printStackTrace();
             }
         }
+        printWinner();
     }
 
     public void move() {
@@ -38,6 +40,15 @@ public class Hippodrome {
         IntStream.range(0, 10).forEach(i -> System.out.println());
     }
 
+    public Horse getWinner() {
+        return horses.stream()
+                .max(Comparator.comparing(Horse::getDistance))
+                .orElse(null);
+    }
+    public void printWinner() {
+        System.out.printf("Winner is %s!\n", getWinner().getName());
+    }
+
     public static void main(String[] args) {
         List<Horse> horses = new ArrayList<>();
         horses.add(new Horse("Jack", 3.0, 0));
@@ -45,5 +56,6 @@ public class Hippodrome {
         horses.add(new Horse("Marlin", 3.0, 0));
         game = new Hippodrome(horses);
         game.run();
+        game.printWinner();
     }
 }
