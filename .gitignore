@@ -12,6 +12,7 @@ target/
 *.info
 *.properties
 *.jar
+*.zip
 1
 2
 3
