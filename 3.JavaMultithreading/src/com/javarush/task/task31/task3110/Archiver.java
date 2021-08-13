@@ -2,6 +2,8 @@ package com.javarush.task.task31.task3110;
 
 import com.javarush.task.task31.task3110.exception.WrongZipFileException;
 
+import java.util.Arrays;
+
 /**
  * Класс архиватор.
  * Главный класс, который архивирует и разархивирует архивы.
@@ -39,9 +41,9 @@ public class Archiver {
     public static Operation askOperation() {
         ConsoleHelper.writeMessage("Выберите операцию:");
         // Выводим список всех доступных операций
-        for (Operation value : Operation.values()) {
-            System.out.println(value.ordinal() + " - " + value.getInfo());
-        }
+        Arrays.stream(Operation.values())
+                .map(value -> value.ordinal() + " - " + value.getInfo())
+                .forEach(ConsoleHelper::writeMessage);
 
         // Считываем с консоли номер
         int numberOperation = ConsoleHelper.readInt();
