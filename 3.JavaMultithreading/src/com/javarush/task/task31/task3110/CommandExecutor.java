@@ -1,0 +1,40 @@
+package com.javarush.task.task31.task3110;
+
+import com.javarush.task.task31.task3110.command.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Класс отвечающий за выполнение возможных комманд.
+ */
+public class CommandExecutor {
+    // Хранилище команд
+    private static final Map<Operation, Command> ALL_KNOWN_COMMANDS_MAP = new HashMap<>();
+
+    // Инициализация хранилища
+    static {
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.CREATE, new ZipCreateCommand());
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.ADD, new ZipAddCommand());
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.REMOVE, new ZipRemoveCommand());
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.EXTRACT, new ZipExtractCommand());
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.CONTENT, new ZipContentCommand());
+        ALL_KNOWN_COMMANDS_MAP.put(Operation.EXIT, new ExitCommand());
+    }
+
+    /**
+     * Приватный конструктор, для запрета явного создания объекта.
+     */
+    private CommandExecutor() {
+    }
+
+    /**
+     * Метод вызывает из хранилища команд метод execute.
+     *
+     * @param operation Операция.
+     * @throws Exception Возможны ошибки.
+     */
+    public static void execute(Operation operation) throws Exception {
+        ALL_KNOWN_COMMANDS_MAP.get(operation).execute();
+    }
+}
