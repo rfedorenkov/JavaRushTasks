@@ -2,7 +2,7 @@ package com.javarush.task.task29.task2908;
 
 public class Copyright implements Computable<Copyright.Period, String> {
     @Override
-    public String compute(Period period) throws InterruptedException {
+    public String compute(Period period) {
         return "All rights reserved (c) " + period.firstYear + "-" + period.secondYear;
     }
 
