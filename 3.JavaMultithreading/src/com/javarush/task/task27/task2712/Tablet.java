@@ -40,6 +40,7 @@ public class Tablet extends Observable {
             logger.log(Level.SEVERE, "Console is unavailable.");
             return null;
         }
+        // возможно нужно вернуть order в блоке finally
     }
 
     @Override
