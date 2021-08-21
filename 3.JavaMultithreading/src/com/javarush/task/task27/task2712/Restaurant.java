@@ -1,8 +1,6 @@
 package com.javarush.task.task27.task2712;
 
-import com.javarush.task.task27.task2712.kitchen.Order;
-
-import java.io.IOException;
+import com.javarush.task.task27.task2712.kitchen.Cook;
 
 /**
  * Основной класс ресторана.
@@ -40,11 +38,18 @@ public class Restaurant {
      */
     public static void main(String[] args) {
 
-        // Создаем планшет и 4 заказа
+        // Создаем планшет и присваиваем ему номер
         Tablet tablet = new Tablet(5);
+
+        // Назначаем наблюдателя (повара)
+        tablet.addObserver(new Cook("Amigo"));
+
+        // Создаем 4 заказа
         tablet.createOrder();
         tablet.createOrder();
         tablet.createOrder();
         tablet.createOrder();
+
     }
 }
+
