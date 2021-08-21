@@ -6,10 +6,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * Класс повара.
- * Готовит заказы. Является наблюдателем (Observer)
+ * Класс повара. Готовит заказы.
+ * Получает заказ с планшета. Является наблюдателем (Observer)
+ * После приготовления заказа уведомляет официанта. Является наблюдаемым (Observable).
  */
-public class Cook implements Observer {
+public class Cook extends Observable implements Observer {
     // Имя повара
     private final String name;
 
@@ -30,13 +31,13 @@ public class Cook implements Observer {
     /**
      * Метод обрабатывает заказы.
      *
-     * @param o Объект, который отправил нам заказ.
+     * @param tablet Объект, который отправил нам заказ.
      * @param order Заказ.
      */
     @Override
-    public void update(Observable o, Object order) {
+    public void update(Observable tablet, Object order) {
         ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
+        setChanged();
+        notifyObservers(order);
     }
 }
-
-

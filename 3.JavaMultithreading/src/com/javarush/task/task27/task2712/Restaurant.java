@@ -1,6 +1,8 @@
 package com.javarush.task.task27.task2712;
 
 import com.javarush.task.task27.task2712.kitchen.Cook;
+import com.javarush.task.task27.task2712.kitchen.Order;
+import com.javarush.task.task27.task2712.kitchen.Waiter;
 
 /**
  * Основной класс ресторана.
@@ -37,18 +39,25 @@ public class Restaurant {
      * Запускает работу ресторана.
      */
     public static void main(String[] args) {
+        // Создаем повара
+        Cook cook = new Cook("Amigo");
+
+        // Создаем официанта
+        Waiter waiter = new Waiter();
 
         // Создаем планшет и присваиваем ему номер
         Tablet tablet = new Tablet(5);
 
         // Назначаем наблюдателя (повара)
-        tablet.addObserver(new Cook("Amigo"));
+        tablet.addObserver(cook);
+        // Назначаем наблюдателя (официанта)
+        cook.addObserver(waiter);
 
         // Создаем 4 заказа
-        tablet.createOrder();
-        tablet.createOrder();
-        tablet.createOrder();
-        tablet.createOrder();
+        Order oneOrder = tablet.createOrder();
+        Order twoOrder = tablet.createOrder();
+        Order threeOrder = tablet.createOrder();
+        Order four = tablet.createOrder();
 
     }
 }

@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Класс планшета.
- * Создает заказы. Является наблюдаемым (Observable)
+ * Класс планшета. Создает заказы.
+ * После получения заказа, передает повару. Является наблюдаемым (Observable)
  */
 public class Tablet extends Observable {
     // Логгер
@@ -40,7 +40,7 @@ public class Tablet extends Observable {
             logger.log(Level.SEVERE, "Console is unavailable.");
             return null;
         }
-        // возможно нужно вернуть order в блоке finally
+        // возможно перенести return Order в finally
     }
 
     @Override
