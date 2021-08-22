@@ -14,6 +14,7 @@ public class Sportsman {
     private int countHitOutTarget = 0; // количество попаданий
 
     public Sportsman(int number) {
+        // присваиваем номер спортсмену
         this.number = number;
         // шанс попадания - это случаное число от минимального до максимального
         chanceToHit = BigDecimal.valueOf(ThreadLocalRandom.current()

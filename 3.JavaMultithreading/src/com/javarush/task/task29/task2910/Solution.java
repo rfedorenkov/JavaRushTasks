@@ -42,7 +42,6 @@ package com.javarush.task.task29.task2910;
 */
 
 public class Solution {
-
     public static void main(String[] args) {
         Game game = new Game();
         printDelimiter();

@@ -29,6 +29,7 @@ public class Game {
         controlSportsman.printResultInfo();
     }
 
+    // Начало соревнования
     public void startCompetition() {
         for (int i = 0; i < members.size(); i++) {
             members.get(i).calculateNumberOfMiss();
