@@ -1,5 +1,8 @@
 package com.javarush.task.task29.task2912;
 
+/**
+ * Абстрактный класс логирования
+ */
 public abstract class AbstractLogger implements Logger {
     int level;
     Logger next;

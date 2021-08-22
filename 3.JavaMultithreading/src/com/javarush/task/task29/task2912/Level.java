@@ -1,5 +1,8 @@
 package com.javarush.task.task29.task2912;
 
+/**
+ * Уровень логгирования
+ */
 public class Level {
     public static final int INFO = 100;
     public static final int WARN = 200;

@@ -28,6 +28,7 @@ package com.javarush.task.task29.task2912;
 */
 
 public class Solution {
+
     public static void main(String[] args) {
         Logger logger3 = new PhoneLogger(Level.FATAL);
         Logger logger2 = new SmsLogger(Level.ERROR);

@@ -1,5 +1,8 @@
 package com.javarush.task.task29.task2912;
 
+/**
+ * Смс логгирование
+ */
 public class SmsLogger extends AbstractLogger {
 
     public SmsLogger(int level) {

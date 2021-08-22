@@ -1,5 +1,8 @@
 package com.javarush.task.task29.task2912;
 
+/**
+ * Логировать в файл
+ */
 public class FileLogger extends AbstractLogger {
 
     public FileLogger(int level) {
