@@ -22,9 +22,6 @@ public class Solution {
     }
 
     public static BigDecimal getValue(double v1, double v2) {
-//        return new BigDecimal(v1).add(new BigDecimal(v2));
-//        return new BigDecimal(Double.toString(v1)).add(new BigDecimal(Double.toString(v2)));
-        BigDecimal.valueOf(v1);
         return new BigDecimal(Double.toString(v1)).add(new BigDecimal(Double.toString(v2)));
     }
 }
