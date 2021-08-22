@@ -47,10 +47,12 @@ public class Solution {
                 }
             }
         }
-        if (flagWin)
+
+        if (flagWin) {
             printCongratulations(tryNumber);
-        else
+        } else {
             printUpset();
+        }
     }
 
     private void printCongratulations(int number) {
