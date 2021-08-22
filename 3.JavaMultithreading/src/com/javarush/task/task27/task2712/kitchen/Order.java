@@ -26,8 +26,28 @@ public class Order {
     }
 
     /**
+     * Метод проверяет есть ли заказы.
+     *
+     * @return Возвращает true, если заказов нет.
+     */
+    public boolean isEmpty() {
+        return dishes.isEmpty();
+    }
+
+    /**
+     * Метод подсчитывает время для приготовления заказа.
+     *
+     * @return Время приготовления заказа.
+     */
+    public int getTotalCookingTime() {
+        return dishes.stream()
+                .mapToInt(Dish::getDuration)
+                .sum();
+    }
+
+    /**
      * Переопределенный метод. Пример возврата строки.
-     * Your order: [JUICE, FISH] of Tablet{number=5}
+     * Your order: [JUICE, FISH] of Tablet{number=5}, cooking time 23min
      *
      * @return Возвращает заказ или пустую строку при отсутствии блюд.
      */
@@ -37,7 +57,7 @@ public class Order {
             return "";
         }
 
-        return String.format("Your order: %s of %s", dishes, tablet);
+        return String.format("Your order: %s of %s, cooking time %dmin", dishes, tablet, getTotalCookingTime());
     }
 }
 

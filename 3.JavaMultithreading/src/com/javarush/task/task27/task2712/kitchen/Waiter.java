@@ -19,6 +19,7 @@ public class Waiter implements Observer {
      */
     @Override
     public void update(Observable cook, Object order) {
+        // Выводим в консоль заказ
         ConsoleHelper.writeMessage(String.format("%s was cooked by %s", order, cook));
     }
 }

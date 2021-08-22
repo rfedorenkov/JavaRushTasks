@@ -1,5 +1,7 @@
 package com.javarush.task.task27.task2712;
 
+import com.javarush.task.task27.task2712.ad.AdvertisementManager;
+import com.javarush.task.task27.task2712.ad.NoVideoAvailableException;
 import com.javarush.task.task27.task2712.kitchen.Order;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ public class Tablet extends Observable {
      */
     public Tablet(int number) {
         this.number = number;
+        ConsoleHelper.writeMessage("Здавствуйте!");
     }
 
     /**
@@ -32,9 +35,29 @@ public class Tablet extends Observable {
     public Order createOrder() {
         try {
             Order order = new Order(this);
-            ConsoleHelper.writeMessage(order.toString());
-            setChanged();
-            notifyObservers(order);
+            // Если в заказе блюда есть, отправляем повару
+            if (!order.isEmpty()) {
+                // Выводим в консоль заказ
+                ConsoleHelper.writeMessage(order.toString());
+
+                // Рекламное видео
+                try {
+                    // Получаем время выполнения заказа в секундах
+                    int totalCookingTimeInSeconds = order.getTotalCookingTime() * 60;
+                    // Создаем менеджера рекламы
+                    AdvertisementManager manager = new AdvertisementManager(totalCookingTimeInSeconds);
+                    // Обрабатываем рекламное видео
+                    manager.processVideos();
+                } catch (NoVideoAvailableException e) {
+                    // Перхватываем и логируем исключение
+                    String message = e.getMessage();
+                    logger.log(Level.INFO, message + order);
+                }
+
+                // Оповещаем повара о заказе
+                setChanged();
+                notifyObservers(order);
+            }
             return order;
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Console is unavailable.");
@@ -50,3 +73,4 @@ public class Tablet extends Observable {
                 '}';
     }
 }
+

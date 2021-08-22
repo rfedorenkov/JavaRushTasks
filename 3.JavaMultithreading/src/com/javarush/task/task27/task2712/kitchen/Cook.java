@@ -36,7 +36,9 @@ public class Cook extends Observable implements Observer {
      */
     @Override
     public void update(Observable tablet, Object order) {
+        // Выводим в консоль заказ
         ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
+        // Оповещаем официанта
         setChanged();
         notifyObservers(order);
     }

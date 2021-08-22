@@ -43,8 +43,6 @@ public class ConsoleHelper {
      */
     public static List<Dish> getAllDishesForOrder() throws IOException {
         List<Dish> dishes = new ArrayList<>();
-
-        writeMessage("Здавствуйте!");
         writeMessage("Выберите блюдо из списка, которое желаете заказать: (для завершения введите 'exit')");
         writeMessage(Dish.allDishesToString());
         while (true) {
