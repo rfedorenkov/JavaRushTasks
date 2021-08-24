@@ -1,12 +1,10 @@
 package com.javarush.task.task27.task2712.statistic;
 
+import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.statistic.event.EventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Класс менеджера статистики.
@@ -18,6 +16,9 @@ public enum StatisticManager {
 
     // Хранилище статистики
     private StatisticStorage statisticStorage = new StatisticStorage();
+
+    // Список поваров
+    private Set<Cook> cooks = new HashSet<>();
 
     /**
      * Метод возвращает менеджера статистики.
@@ -39,28 +40,15 @@ public enum StatisticManager {
      */
     public void register(EventDataRow data) {
         statisticStorage.put(data);
-//Теперь остается расставить вызовы StatisticManager в те места, которые генерируют события.
+    }
 
-
-//
-//4. Зарегистрируй событие для повара во время приготовления еды.
-
-//Добавь геттер для поля dishes в класс Order, используй его при создании события.
-//
-//5. Зарегистрируй событие "видео выбрано" перед отображением рекламы пользователю.
-//
-//6. Метод register с одним параметром типа EventDataRow должен регистрировать полученное событие в statisticStorage.
-//
-//
-//Requirements:
-//1. В интерфейсе EventDataRow должен быть объявлен метод EventType getType().
-//2. В классах поддерживающих интерфейс EventDataRow должен быть корректно реализован метод getType().
-//3. Метод put в классе StatisticStorage должен быть реализован в соответствии с условием задачи.
-//4. Метод register класса StatisticManager с одним параметром типа EventDataRow должен регистрировать
-// полученное событие в statisticStorage.
-//5. Повар во время приготовления еды должен генерировать соответствующее событие.
-//6. Перед отображением списка видео должно быть зарегистрировано событие "видео выбрано".
-
+    /**
+     * Метод регистрирует повара (добавляет в Set)
+     *
+     * @param cook Повар.
+     */
+    public void register(Cook cook) {
+        cooks.add(cook);
     }
 
     /**
@@ -92,6 +80,4 @@ public enum StatisticManager {
         }
     }
 }
-
-
 

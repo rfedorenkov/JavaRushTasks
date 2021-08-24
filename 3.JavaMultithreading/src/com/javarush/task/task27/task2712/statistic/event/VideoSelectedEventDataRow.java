@@ -43,4 +43,25 @@ public class VideoSelectedEventDataRow implements EventDataRow {
         return EventType.SELECTED_VIDEOS;
     }
 
+    /**
+     * Метод возвращает дату создания события.
+     *
+     * @return Дата создания события.
+     */
+    @Override
+    public Date getDate() {
+        return currentDate;
+    }
+
+    /**
+     * Метод возвращает общую продолжительность показа
+     * отобранных рекламных роликов.
+     *
+     * @return Общая продолжительность рекламных роликов.
+     */
+    @Override
+    public int getTime() {
+        return totalDuration;
+    }
+
 }

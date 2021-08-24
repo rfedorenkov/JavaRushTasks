@@ -54,10 +54,15 @@ public class Restaurant {
         cook.addObserver(waiter);
 
         // Создаем 4 заказа
-        Order oneOrder = tablet.createOrder();
-//        Order twoOrder = tablet.createOrder();
-//        Order threeOrder = tablet.createOrder();
-//        Order four = tablet.createOrder();
+        Order order = tablet.createOrder();
+
+        // Создаем планшет директора
+        DirectorTablet directorTablet = new DirectorTablet();
+        // Вызываем 4 метода, для отбора статистики
+        directorTablet.printAdvertisementProfit();
+        directorTablet.printCookWorkloading();
+        directorTablet.printActiveVideoSet();
+        directorTablet.printArchivedVideoSet();
 
     }
 }

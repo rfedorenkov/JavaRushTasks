@@ -66,4 +66,13 @@ public class RestaurantTest {
     public void testStaticManagerCreate() {
         StatisticManager instance = StatisticManager.INSTANCE;
     }
+
+    @Test
+    public void testDirectorTabletMethods() {
+        DirectorTablet directorTablet = new DirectorTablet();
+        directorTablet.printAdvertisementProfit();
+        directorTablet.printCookWorkloading();
+        directorTablet.printActiveVideoSet();
+        directorTablet.printArchivedVideoSet();
+    }
 }

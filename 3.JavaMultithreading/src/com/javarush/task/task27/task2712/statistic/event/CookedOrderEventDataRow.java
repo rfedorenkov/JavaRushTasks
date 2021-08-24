@@ -48,4 +48,24 @@ public class CookedOrderEventDataRow implements EventDataRow {
         return EventType.COOKED_ORDER;
     }
 
+    /**
+     * Метод возвращает дату создания события.
+     *
+     * @return Дата создания события.
+     */
+    @Override
+    public Date getDate() {
+        return currentDate;
+    }
+
+    /**
+     * Метод возвращает время приготовления заказа.
+     *
+     * @return Время приготовления заказа в секундах.
+     */
+    @Override
+    public int getTime() {
+        return cookingTimeSeconds;
+    }
+
 }
