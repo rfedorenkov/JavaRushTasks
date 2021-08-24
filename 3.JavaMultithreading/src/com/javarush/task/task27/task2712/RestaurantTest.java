@@ -3,6 +3,7 @@ package com.javarush.task.task27.task2712;
 import com.javarush.task.task27.task2712.ad.Advertisement;
 import com.javarush.task.task27.task2712.ad.AdvertisementManager;
 import com.javarush.task.task27.task2712.kitchen.Dish;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -62,7 +63,7 @@ public class RestaurantTest {
     }
 
     @Test
-    public void testName() {
-        System.out.println(new Date());
+    public void testStaticManagerCreate() {
+        StatisticManager instance = StatisticManager.INSTANCE;
     }
 }
