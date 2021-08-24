@@ -46,7 +46,7 @@ public class Cook extends Observable implements Observer {
             // Регистрируем событие "Повар приготовил заказ"
             StatisticManager.getInstance()
                     .register(new CookedOrderEventDataRow(order.getTablet().toString(),
-                            name, order.getTotalCookingTime(), order.dishes));
+                            name, order.getTotalCookingTime() * 60, order.dishes));
 
             // Оповещаем официанта
             setChanged();

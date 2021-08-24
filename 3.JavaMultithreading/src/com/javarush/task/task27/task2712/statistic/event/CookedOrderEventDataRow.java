@@ -31,11 +31,19 @@ public class CookedOrderEventDataRow implements EventDataRow {
      * @param cookingDishes Список блюд для приготовления.
      */
     public CookedOrderEventDataRow(String tabletName, String cookName, int cookingTimeSeconds, List<Dish> cookingDishes) {
-
         this.tabletName = tabletName;
         this.cookName = cookName;
         this.cookingTimeSeconds = cookingTimeSeconds;
         this.cookingDishes = cookingDishes;
+    }
+
+    /**
+     * Метод возвращает имя повара.
+     *
+     * @return Имя повара.
+     */
+    public String getCookName() {
+        return cookName;
     }
 
     /**
@@ -68,4 +76,7 @@ public class CookedOrderEventDataRow implements EventDataRow {
         return cookingTimeSeconds;
     }
 
+    public void setCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
+    }
 }

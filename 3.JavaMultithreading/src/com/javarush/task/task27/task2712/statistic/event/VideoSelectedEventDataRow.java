@@ -34,6 +34,15 @@ public class VideoSelectedEventDataRow implements EventDataRow {
     }
 
     /**
+     * Метод возвращает сумму денег в копейках.
+     *
+     * @return Сумма денег в копейках.
+     */
+    public long getAmount() {
+        return amount;
+    }
+
+    /**
      * Метод возвращает тип события.
      *
      * @return Тип события - Показ рекламных роликов.
@@ -64,4 +73,15 @@ public class VideoSelectedEventDataRow implements EventDataRow {
         return totalDuration;
     }
 
+    @Override
+    public String toString() {
+        return "VideoSelectedEventDataRow{" +
+                "optimalVideoSet=" + optimalVideoSet +
+                '}';
+    }
+
+    public void setCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
+    }
 }
+

@@ -1,5 +1,9 @@
 package com.javarush.task.task27.task2712;
 
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+
+import java.util.*;
+
 /**
  * Класс планшета директора ресторана.
  */
@@ -10,7 +14,10 @@ public class DirectorTablet {
      * Сгруппированно по дням.
      */
     public void printAdvertisementProfit() {
-
+        // Печатаем в консоль общую статистику по рекламным роликам
+        StatisticManager.getInstance()
+                .getAdvertisementProfitMap()
+                .forEach((date, amount) -> System.out.printf(Locale.ENGLISH, "%s - %.2f%n", date, amount));
     }
 
     /**
@@ -18,7 +25,13 @@ public class DirectorTablet {
      * Сгруппированно по дням.
      */
     public void printCookWorkloading() {
-
+        StatisticManager.getInstance().getCookWorkLoadingMap().forEach((key, value) -> {
+            System.out.println(key);
+            for (Map.Entry<String, Integer> cooks : value.entrySet()) {
+                System.out.printf("%s - %d min%n", cooks.getKey(), cooks.getValue());
+            }
+            System.out.println();
+        });
     }
 
     /**
@@ -26,7 +39,6 @@ public class DirectorTablet {
      * количество показов по каждому.
      */
     public void printActiveVideoSet() {
-
     }
 
     /**
@@ -37,13 +49,3 @@ public class DirectorTablet {
 
     }
 }
-
-
-
-//
-//
-//Requirements:
-//1. В классе DirectorTablet должны быть созданы методы перечисленные в условии задачи.
-//2. В методе main класса Restaurant должен быть создан новый DirectorTablet и вызваны методы отображения статистики.
-//3. В интерфейсе EventDataRow должны быть объявлены методы getDate и getTime.
-//4. В классе StatisticManager должен быть реализован метод register с одним параметром типа Cook, регистрирующий полученного повара в множестве всех поваров (cooks).

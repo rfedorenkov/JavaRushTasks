@@ -2,14 +2,16 @@ package com.javarush.task.task27.task2712;
 
 import com.javarush.task.task27.task2712.ad.Advertisement;
 import com.javarush.task.task27.task2712.ad.AdvertisementManager;
+import com.javarush.task.task27.task2712.ad.AdvertisementStorage;
+import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.kitchen.Dish;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
+import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class RestaurantTest {
 
@@ -68,11 +70,56 @@ public class RestaurantTest {
     }
 
     @Test
-    public void testDirectorTabletMethods() {
+    public void testDirectorPrintAdvertisementProfit() {
+        StatisticManager manager = StatisticManager.INSTANCE;
+
+        VideoSelectedEventDataRow oneVideo = new VideoSelectedEventDataRow(AdvertisementStorage.getInstance().list(), 500, 1680);
+        VideoSelectedEventDataRow twoVideo = new VideoSelectedEventDataRow(AdvertisementStorage.getInstance().list(), 120, 1680);
+
+        VideoSelectedEventDataRow threeVideo = new VideoSelectedEventDataRow(AdvertisementStorage.getInstance().list(), 187, 1680);
+        threeVideo.setCurrentDate(new Date(102020202020L));
+
+        manager.register(oneVideo);
+        manager.register(twoVideo);
+        manager.register(threeVideo);
+
         DirectorTablet directorTablet = new DirectorTablet();
         directorTablet.printAdvertisementProfit();
+    }
+
+    @Test
+    public void testDirectorPrintCookWorkloading() {
+
+        StatisticManager manager = StatisticManager.INSTANCE;
+        List<Dish> dishes = new ArrayList<>();
+        dishes.add(Dish.WATER);
+        dishes.add(Dish.FISH);
+
+        manager.register(new CookedOrderEventDataRow("Планшет №1", "Валерий", 28 * 60, dishes));
+        manager.register(new CookedOrderEventDataRow("Планшет №2", "Александр", 28 * 60, dishes));
+        manager.register(new CookedOrderEventDataRow("Планшет №3", "Александр", 28 * 60, dishes));
+
+        CookedOrderEventDataRow cookedOne = new CookedOrderEventDataRow("Планшет №3", "Николай", 28 * 60, dishes);
+        cookedOne.setCurrentDate(new GregorianCalendar(2013, Calendar.JULY, 13).getTime());
+        manager.register(cookedOne);
+
+        CookedOrderEventDataRow cookedTwo = new CookedOrderEventDataRow("Планшет №34", "Николай", 28 * 60, dishes);
+        cookedTwo.setCurrentDate(new GregorianCalendar(2013, Calendar.JULY, 14).getTime());
+        manager.register(cookedTwo);
+
+        DirectorTablet directorTablet = new DirectorTablet();
         directorTablet.printCookWorkloading();
-        directorTablet.printActiveVideoSet();
-        directorTablet.printArchivedVideoSet();
+
+        //14-Jul-2013
+        //Ivanov - 60 min
+        //Petrov - 35 min
+        //
+        //13-Jul-2013
+        //Ivanov - 129 min
+        //
+        //12-Jul-2013
+        //Ivanov - 6 min
+        //Petrov - 5 min
+
     }
 }
