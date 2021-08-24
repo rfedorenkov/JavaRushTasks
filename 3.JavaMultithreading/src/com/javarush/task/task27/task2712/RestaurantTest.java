@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RestaurantTest {
@@ -58,5 +59,10 @@ public class RestaurantTest {
         advertisementManager.processVideos();
 
         System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void testName() {
+        System.out.println(new Date());
     }
 }
