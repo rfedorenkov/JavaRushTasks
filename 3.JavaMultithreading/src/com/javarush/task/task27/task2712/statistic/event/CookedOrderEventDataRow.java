@@ -37,4 +37,15 @@ public class CookedOrderEventDataRow implements EventDataRow {
         this.cookingTimeSeconds = cookingTimeSeconds;
         this.cookingDishes = cookingDishes;
     }
+
+    /**
+     * Метод возвращает тип события.
+     *
+     * @return Тип события - Приготовление заказа.
+     */
+    @Override
+    public EventType getType() {
+        return EventType.COOKED_ORDER;
+    }
+
 }

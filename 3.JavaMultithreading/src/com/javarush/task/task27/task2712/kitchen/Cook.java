@@ -1,6 +1,8 @@
 package com.javarush.task.task27.task2712.kitchen;
 
 import com.javarush.task.task27.task2712.ConsoleHelper;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -32,14 +34,23 @@ public class Cook extends Observable implements Observer {
      * Метод обрабатывает заказы.
      *
      * @param tablet Объект, который отправил нам заказ.
-     * @param order Заказ.
+     * @param obj    Заказ.
      */
     @Override
-    public void update(Observable tablet, Object order) {
-        // Выводим в консоль заказ
-        ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
-        // Оповещаем официанта
-        setChanged();
-        notifyObservers(order);
+    public void update(Observable tablet, Object obj) {
+        if (obj instanceof Order) {
+            Order order = (Order) obj;
+            // Выводим в консоль заказ
+            ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
+
+            // Регистрируем событие "Повар приготовил заказ"
+            StatisticManager.getInstance()
+                    .register(new CookedOrderEventDataRow(order.getTablet().toString(),
+                            name, order.getTotalCookingTime(), order.dishes));
+
+            // Оповещаем официанта
+            setChanged();
+            notifyObservers(obj);
+        }
     }
 }

@@ -55,9 +55,9 @@ public class Restaurant {
 
         // Создаем 4 заказа
         Order oneOrder = tablet.createOrder();
-        Order twoOrder = tablet.createOrder();
-        Order threeOrder = tablet.createOrder();
-        Order four = tablet.createOrder();
+//        Order twoOrder = tablet.createOrder();
+//        Order threeOrder = tablet.createOrder();
+//        Order four = tablet.createOrder();
 
     }
 }

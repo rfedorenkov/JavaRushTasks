@@ -1,6 +1,8 @@
 package com.javarush.task.task27.task2712.ad;
 
 import com.javarush.task.task27.task2712.ConsoleHelper;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +24,8 @@ public class AdvertisementManager {
     private List<Advertisement> bestAdList = new ArrayList<>();
     // Лучшая цена рекламных роликов
     private long bestPrice;
+    // Лучшая продолжительность рекламных роликов
+    private int maxDuration;
 
     /**
      * Конструктор класса.
@@ -86,6 +90,11 @@ public class AdvertisementManager {
 
         // Формируем список по ревелантности рекламных роликов
         makeAdvertisementList(storage.list());
+
+        // Регистрируем событие "видео выбрано"
+        StatisticManager.getInstance()
+                .register(new VideoSelectedEventDataRow(bestAdList, bestPrice, maxDuration));
+
         // Выводим в консоль список доступных роликов
         printBestAd();
     }
@@ -106,6 +115,8 @@ public class AdvertisementManager {
                 timeSeconds -= duration;
             }
         }
+        bestPrice = calculatePrice(bestAdList);
+        maxDuration = calculateDuration(bestAdList);
     }
 
 

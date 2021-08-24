@@ -10,19 +10,40 @@ import java.util.List;
  * Класс заказа.
  */
 public class Order {
+
     // Планшет
     private final Tablet tablet;
+
     // Список выбранных блюд
     protected List<Dish> dishes;
 
     /**
      * Конструктор заказа.
      *
-     * @param tablet Принимает планшет.
+     * @param tablet Планшет.
      */
     public Order(Tablet tablet) throws IOException {
         this.tablet = tablet;
         dishes = ConsoleHelper.getAllDishesForOrder();
+    }
+
+    /**
+     * Геттер планшета.
+     *
+     * @return Планшет.
+     */
+    public Tablet getTablet() {
+        return tablet;
+    }
+
+
+    /**
+     * Геттер списка выбранных блюд.
+     *
+     * @return Выбранные блюда.
+     */
+    public List<Dish> getDishes() {
+        return dishes;
     }
 
     /**

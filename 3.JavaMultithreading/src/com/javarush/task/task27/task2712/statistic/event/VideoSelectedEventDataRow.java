@@ -32,4 +32,15 @@ public class VideoSelectedEventDataRow implements EventDataRow {
         this.amount = amount;
         this.totalDuration = totalDuration;
     }
+
+    /**
+     * Метод возвращает тип события.
+     *
+     * @return Тип события - Показ рекламных роликов.
+     */
+    @Override
+    public EventType getType() {
+        return EventType.SELECTED_VIDEOS;
+    }
+
 }

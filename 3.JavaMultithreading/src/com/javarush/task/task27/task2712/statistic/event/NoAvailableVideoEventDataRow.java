@@ -20,8 +20,17 @@ public class NoAvailableVideoEventDataRow implements EventDataRow {
      * @param totalDuration Время приготовления заказа в секундах.
      */
     public NoAvailableVideoEventDataRow(int totalDuration) {
-
         this.totalDuration = totalDuration;
+    }
+
+    /**
+     * Метод возвращает тип события.
+     *
+     * @return Тип события - Нет доступных видео.
+     */
+    @Override
+    public EventType getType() {
+        return EventType.NO_AVAILABLE_VIDEO;
     }
 }
 

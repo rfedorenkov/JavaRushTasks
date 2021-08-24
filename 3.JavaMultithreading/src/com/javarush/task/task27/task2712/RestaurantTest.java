@@ -59,7 +59,7 @@ public class RestaurantTest {
         AdvertisementManager advertisementManager = new AdvertisementManager(totalTime);
         advertisementManager.processVideos();
 
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(String.format("Total time: %d ms", System.currentTimeMillis() - start));
     }
 
     @Test
