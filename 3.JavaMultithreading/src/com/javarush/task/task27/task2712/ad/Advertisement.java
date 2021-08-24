@@ -83,10 +83,19 @@ public class Advertisement implements Comparable<Advertisement> {
      * @throws UnsupportedOperationException Если количество показов не положительное число;
      */
     public void revalidate() throws UnsupportedOperationException {
-        if (hits <= 0) {
-            throw new UnsupportedOperationException();
+        if (!isActive()) {
+            throw new UnsupportedOperationException("Promotional video not available (hits = 0)");
         }
         hits--;
+    }
+
+    /**
+     * Метод проверяет активность рекламного ролика.
+     *
+     * @return Если количество доступных показов больше 0, возвращает true;
+     */
+    public boolean isActive() {
+        return hits > 0;
     }
 
     /**

@@ -23,7 +23,7 @@ public class ConsoleHelper {
      *
      * @param message Сообщение, которое нужно вывести в консоль.
      */
-    public static void writeMessage(String message) {
+    public static <T> void writeMessage(T message) {
         System.out.println(message);
     }
 

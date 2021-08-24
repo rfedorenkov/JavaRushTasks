@@ -2,7 +2,8 @@ package com.javarush.task.task27.task2712.ad;
 
 import com.javarush.task.task27.task2712.ConsoleHelper;
 
-import java.util.Collections;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Класс менеджера рекламы.
@@ -17,6 +18,11 @@ public class AdvertisementManager {
     // Время выполнения заказа секундах
     private int timeSeconds;
 
+    // Лучшие список рекламных роликов
+    private List<Advertisement> bestAdList = new ArrayList<>();
+    // Лучшая цена рекламных роликов
+    private long bestPrice;
+
     /**
      * Конструктор класса.
      *
@@ -26,6 +32,41 @@ public class AdvertisementManager {
         this.timeSeconds = timeSeconds;
     }
 
+    /**
+     * Геттер лучшего списка рекламных роликов.
+     *
+     * @return Лучший список рекламных роликов.
+     */
+    public List<Advertisement> getBestAdList() {
+        return bestAdList;
+    }
+
+    /**
+     * Метод выводит на экран отсортированный список рекламных роликов.
+     */
+    public void printSortedBestAd() {
+        // Сортируем список
+        Collections.sort(bestAdList);
+
+        bestAdList.forEach(advertisement -> {
+            // Выводим в консоль
+            ConsoleHelper.writeMessage(advertisement);
+            // Уменьшаем количество показов
+            advertisement.revalidate();
+        });
+    }
+
+    /**
+     * Метод выводит на экран список рекламных роликов.
+     */
+    public void printBestAd() {
+        bestAdList.forEach(advertisement -> {
+            // Выводим в консоль
+            ConsoleHelper.writeMessage(advertisement);
+            // Уменьшаем количество показов
+            advertisement.revalidate();
+        });
+    }
 
     /**
      * Метод обрабатывает рекламное видео.
@@ -40,56 +81,96 @@ public class AdvertisementManager {
             throw new NoVideoAvailableException("No video is available for the order ");
         }
 
-        // TODO 2.2 (Подобрать список видео из доступных, просмотр которых обеспечивает максимальную выгоду)
-        // Рекурсию используют тогда, когда алгоритм решения задачи совпадает с алгоритмом решения подзадачи (части).
-        // У нас как раз такой случай. Нам нужно сделать полный перебор всех вариантов и выбрать из них лучший.
-        //
-        // Напомню, рекурсия пишется по следующему принципу:
-        // а) условие выхода/окончания рекурсии
-        // б) условие продолжения - вызов самой себя с набором параметров предыдущего шага.
-        // В любое время ты можешь почитать в инете подробную информацию по написанию рекурсии.
-        //
-        // Текущее задание - реализовать п.2.2 предыдущего задания с помощью рекурсии.
-        // (подобрать список видео из доступных, просмотр которых обеспечивает максимальную выгоду)
-        // Рекурсивный метод должен выбрать набор рекламных роликов, которые будут показаны посетителю.
-        //
-        // Этот набор должен удовлетворять следующим требованиям:
-        // 1. сумма денег, полученная от показов, должна быть максимальной из всех возможных вариантов
-        // 2. общее время показа рекламных роликов НЕ должно превышать время приготовления блюд для текущего заказа;
-        // 3. для одного заказа любой видео-ролик показывается не более одного раза;
-        // 4. если существует несколько вариантов набора видео-роликов с одинаковой суммой денег, полученной от показов, то:
-        // 4.1. выбрать тот вариант, у которого суммарное время максимальное;
-        // 4.2. если суммарное время у этих вариантов одинаковое, то выбрать вариант с минимальным количеством роликов;
-        // 5. количество показов у любого рекламного ролика из набора - положительное число.
+//        makeAllSets(activeList(storage.list()));
+//        printSortedBestAd();
 
-        int totalSum = 0;
-        int maximumSum = 1000;
+        // Формируем список по ревелантности рекламных роликов
+        makeAdvertisementList(storage.list());
+        // Выводим в консоль список доступных роликов
+        printBestAd();
+    }
+
+    /**
+     * Решение задачи с помощью "Жадного алгоритма".
+     * Создание всех наборов перестановок значений.
+     *
+     * @param list Список предметов.
+     */
+    public void makeAdvertisementList(List<Advertisement> list) {
+        ArrayList<Advertisement> copyList = new ArrayList<>(list);
+        Collections.sort(copyList);
+        for (Advertisement advertisement : copyList) {
+            int duration = advertisement.getDuration();
+            if (advertisement.isActive() && duration <= timeSeconds) {
+                bestAdList.add(advertisement);
+                timeSeconds -= duration;
+            }
+        }
+    }
 
 
-        // Пример для заказа [WATER]:
-        // First Video is displaying... 50, 277
-        Collections.sort(storage.list());
+    /**
+     * Рекурсивное решение задачи.
+     * Создание всех наборов перестановок значений.
+     *
+     * @param list Список предметов.
+     */
+    public void makeAllSets(List<Advertisement> list) {
+        // Проверяем, является ли данный список лучшим решением
+        if (list.size() > 0) {
+            checkSet(list);
+        }
 
-        for (Advertisement ad : storage.list()) {
-            // Выводим в консоль
-            ConsoleHelper.writeMessage(ad.toString());
+        // Проходимся циклом по всему списку предметов
+        for (int i = 0; i < list.size(); i++) {
+            // Создаем новый список на основе имеющегося
+            List<Advertisement> newItems = new ArrayList<>(list);
+            newItems.remove(i);
+            makeAllSets(newItems);
+        }
+    }
 
-            // Уменьшаем количество показов
-            ad.revalidate();
+    private List<Advertisement> activeList(List<Advertisement> list) {
+        return list.stream()
+                .filter(Advertisement::isActive)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Считаем суммарную продолжительность рекламных роликов.
+     *
+     * @param list Список рекламных роликов.
+     * @return Суммарная продолжительность рекламных роликов.
+     */
+    private int calculateDuration(List<Advertisement> list) {
+        return list.stream()
+                .mapToInt(Advertisement::getDuration)
+                .sum();
+    }
+
+    /**
+     * Считаем суммарную стоимость рекламных роликов.
+     *
+     * @param list Список рекламных роликов.
+     * @return Суммарная стоимость рекламных роликов.
+     */
+    private long calculatePrice(List<Advertisement> list) {
+        return list.stream()
+                .mapToLong(Advertisement::getAmountPerOneDisplaying)
+                .sum();
+    }
+
+    /**
+     * Проверяем, является ли данный список лучшим решением.
+     *
+     * @param list Список рекламных роликов.
+     */
+    private void checkSet(List<Advertisement> list) {
+        // Сравниваем продолжительность ролика с максимальной продолжительностью
+        // и стоимость рекламных роликов с лучшей ценой
+        if (calculateDuration(list) <= timeSeconds && calculatePrice(list) > bestPrice) {
+            bestAdList = list;
+            bestPrice = calculatePrice(list);
         }
     }
 }
-
-//Requirements:
-//1. Сумма денег, полученная от показов, должна быть максимальной из всех возможных вариантов.
-//2. Общее время показа рекламных роликов НЕ должно превышать время приготовления блюд для текущего заказа.
-//3. Для одного заказа любой видео-ролик должен показываться не более одного раза.
-
-//4. Если существует несколько вариантов набора видео-роликов с одинаковой суммой денег,
-// полученной от показов, то должен быть выбран вариант с максимальным суммарным временем.
-
-//5. Если существует несколько вариантов набора видео-роликов с одинаковой суммой денег
-// и одинаковым суммарным временем, то должен быть выбран вариант с минимальным количеством роликов.
-
-//6. В набор должны отбираться только ролики с положительным числом показов.
-//7. Для каждого показанного ролика должен быть вызван метод revalidate.
