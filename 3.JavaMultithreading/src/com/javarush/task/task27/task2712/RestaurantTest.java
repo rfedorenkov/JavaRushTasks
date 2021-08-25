@@ -5,12 +5,14 @@ import com.javarush.task.task27.task2712.ad.AdvertisementManager;
 import com.javarush.task.task27.task2712.ad.AdvertisementStorage;
 import com.javarush.task.task27.task2712.ad.StatisticAdvertisementManager;
 import com.javarush.task.task27.task2712.kitchen.Dish;
+import com.javarush.task.task27.task2712.kitchen.TestOrder;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 public class RestaurantTest {
@@ -130,5 +132,17 @@ public class RestaurantTest {
         directorTablet.printActiveVideoSet();
         System.out.println("========================");
         directorTablet.printArchivedVideoSet();
+    }
+
+    @Test
+    public void testInitDishes() {
+//        try {
+//            TestOrder test = new TestOrder(new Tablet(1));
+//            test.getDishes().forEach(System.out::println);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        RandomOrderGeneratorTask task = new RandomOrderGeneratorTask();
+//        task.run();
     }
 }

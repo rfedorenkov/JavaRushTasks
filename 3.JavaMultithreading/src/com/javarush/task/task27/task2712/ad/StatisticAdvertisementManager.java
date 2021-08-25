@@ -1,6 +1,5 @@
 package com.javarush.task.task27.task2712.ad;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public enum StatisticAdvertisementManager {
      * @param isActive Активный ролик - true, Архивный - false.
      * @return Отсортированный список рекламных роликов в зависимости от переданного параметра.
      */
-    public List<Advertisement> getActiveAdvertisementList(boolean isActive) {
+    public List<Advertisement> getAdvertisementList(boolean isActive) {
         return advertisementStorage.list()
                 .stream()
                 .filter(advertisement -> isActive == advertisement.isActive())

@@ -25,10 +25,6 @@ public class Cook extends Observable implements Observer {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 
     /**
      * Метод обрабатывает заказы.
@@ -52,5 +48,10 @@ public class Cook extends Observable implements Observer {
             setChanged();
             notifyObservers(obj);
         }
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

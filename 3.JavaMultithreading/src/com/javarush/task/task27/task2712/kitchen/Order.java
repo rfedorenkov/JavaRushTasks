@@ -24,7 +24,7 @@ public class Order {
      */
     public Order(Tablet tablet) throws IOException {
         this.tablet = tablet;
-        dishes = ConsoleHelper.getAllDishesForOrder();
+        initDishes();
     }
 
     /**
@@ -44,6 +44,13 @@ public class Order {
      */
     public List<Dish> getDishes() {
         return dishes;
+    }
+
+    /**
+     * Метод инициализирует список выбранных блюд.
+     */
+    protected void initDishes() throws IOException {
+        dishes = ConsoleHelper.getAllDishesForOrder();
     }
 
     /**

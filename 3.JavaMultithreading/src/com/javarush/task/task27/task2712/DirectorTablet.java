@@ -1,6 +1,5 @@
 package com.javarush.task.task27.task2712;
 
-import com.javarush.task.task27.task2712.ad.Advertisement;
 import com.javarush.task.task27.task2712.ad.StatisticAdvertisementManager;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
@@ -19,7 +18,9 @@ public class DirectorTablet {
         // Печатаем в консоль общую статистику по рекламным роликам
         StatisticManager.getInstance()
                 .getAdvertisementProfitMap()
-                .forEach((date, amount) -> System.out.printf(Locale.ENGLISH, "%s - %.2f%n", date, amount));
+                .forEach((date, amount) ->
+                        ConsoleHelper.writeMessage(String.format(Locale.ENGLISH, "%s - %.2f", date, amount)));
+
     }
 
     /**
@@ -28,11 +29,11 @@ public class DirectorTablet {
      */
     public void printCookWorkloading() {
         StatisticManager.getInstance().getCookWorkLoadingMap().forEach((key, value) -> {
-            System.out.println(key);
+            ConsoleHelper.writeMessage(key);
             for (Map.Entry<String, Integer> cooks : value.entrySet()) {
-                System.out.printf("%s - %d min%n", cooks.getKey(), cooks.getValue());
+                ConsoleHelper.writeMessage(String.format("%s - %d min", cooks.getKey(), cooks.getValue()));
             }
-            System.out.println();
+            ConsoleHelper.writeMessage("");
         });
     }
 
@@ -42,8 +43,8 @@ public class DirectorTablet {
      */
     public void printActiveVideoSet() {
         StatisticAdvertisementManager.getInstance()
-                .getActiveAdvertisementList(true)
-                .forEach(ad -> System.out.printf("%s - %d%n", ad.getName(), ad.getHits()));
+                .getAdvertisementList(true)
+                .forEach(ad -> ConsoleHelper.writeMessage(String.format("%s - %d", ad.getName(), ad.getHits())));
     }
 
     /**
@@ -51,7 +52,7 @@ public class DirectorTablet {
      */
     public void printArchivedVideoSet() {
         StatisticAdvertisementManager.getInstance()
-                .getActiveAdvertisementList(false)
-                .forEach(ad -> System.out.println(ad.getName()));
+                .getAdvertisementList(false)
+                .forEach(ad -> ConsoleHelper.writeMessage(ad.getName()));
     }
 }

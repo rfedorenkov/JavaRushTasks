@@ -1,7 +1,5 @@
 package com.javarush.task.task27.task2712.ad;
 
-import java.util.Objects;
-
 /**
  * Класс с рекламным объявлением.
  * Реклама - это видео определенной продолжительности.
