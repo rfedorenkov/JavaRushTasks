@@ -46,6 +46,8 @@ public class Restaurant {
      * Запускает работу ресторана.
      */
     public static void main(String[] args) {
+        OrderManager manager = new OrderManager();
+
         // Создаем повара
         Cook firstCook = new Cook("Amigo");
         Cook secondCook = new Cook("Ellie");
@@ -60,8 +62,7 @@ public class Restaurant {
             Tablet tablet = new Tablet(i);
             tablets.add(tablet);
             // Добавляем поваров в качестве наблюдателей
-            tablet.addObserver(firstCook);
-            tablet.addObserver(secondCook);
+            tablet.addObserver(manager);
         }
 
         Thread thread = new Thread(new RandomOrderGeneratorTask(tablets, ORDER_CREATING_INTERVAL));

@@ -5,14 +5,13 @@ import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Класс повара. Готовит заказы.
- * Получает заказ с планшета. Является наблюдателем (Observer)
+ * Получает заказ от менеджера заказов.
  * После приготовления заказа уведомляет официанта. Является наблюдаемым (Observable).
  */
-public class Cook extends Observable implements Observer {
+public class Cook extends Observable {
     // Имя повара
     private final String name;
 
@@ -27,27 +26,23 @@ public class Cook extends Observable implements Observer {
 
 
     /**
-     * Метод обрабатывает заказы.
+     * Метод начинает приготовление заказа.
+     * Уведомляет официанта о готовности заказа.
      *
-     * @param tablet Объект, который отправил нам заказ.
-     * @param obj    Заказ.
+     * @param order Заказ.
      */
-    @Override
-    public void update(Observable tablet, Object obj) {
-        if (obj instanceof Order) {
-            Order order = (Order) obj;
-            // Выводим в консоль заказ
-            ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
+    public void startCookingOrder(Order order) {
+        // Выводим в консоль заказ
+        ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
 
-            // Регистрируем событие "Повар приготовил заказ"
-            StatisticManager.getInstance()
-                    .register(new CookedOrderEventDataRow(order.getTablet().toString(),
-                            name, order.getTotalCookingTime() * 60, order.dishes));
+        // Регистрируем событие "Повар приготовил заказ"
+        StatisticManager.getInstance()
+                .register(new CookedOrderEventDataRow(order.getTablet().toString(),
+                        name, order.getTotalCookingTime() * 60, order.dishes));
 
-            // Оповещаем официанта
-            setChanged();
-            notifyObservers(obj);
-        }
+        // Оповещаем официанта
+        setChanged();
+        notifyObservers(order);
     }
 
     @Override
