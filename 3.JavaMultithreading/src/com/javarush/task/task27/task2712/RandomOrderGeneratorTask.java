@@ -10,28 +10,33 @@ public class RandomOrderGeneratorTask implements Runnable {
     // Список всех планшетов
     private List<Tablet> tablets;
     // Интервал создания заказа
-    private final int orderCreatingInterval;
+    private final int interval;
 
     /**
      * Конструктор класса.
      *
-     * @param tablets               Список планшетов.
-     * @param orderCreatingInterval Интервал создания заказа.
+     * @param tablets  Список планшетов.
+     * @param interval Интервал создания заказа.
      */
-    public RandomOrderGeneratorTask(List<Tablet> tablets, int orderCreatingInterval) {
+    public RandomOrderGeneratorTask(List<Tablet> tablets, int interval) {
         this.tablets = tablets;
-        this.orderCreatingInterval = orderCreatingInterval;
+        this.interval = interval;
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
+            // Получаем случайный сгенерированный id номер
             int id = (int) (Math.random() * tablets.size());
-            Tablet tablet = tablets.get(id);
-            tablet.createTestOrder();
+            // Получаем объект по id и вызываем createTestOrder
+            tablets.get(id).createTestOrder();
+
             try {
-                Thread.sleep(orderCreatingInterval);
-            } catch (InterruptedException ignored) {
+                // Ожидаем в пределах указанного интервала
+                Thread.sleep(interval);
+            } catch (InterruptedException e) {
+                // Если было исключение, то повторно прерываем
+                Thread.currentThread().interrupt();
             }
         }
     }

@@ -4,6 +4,7 @@ import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.kitchen.Order;
 import com.javarush.task.task27.task2712.kitchen.TestOrder;
 import com.javarush.task.task27.task2712.kitchen.Waiter;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +46,38 @@ public class Restaurant {
      * Запускает работу ресторана.
      */
     public static void main(String[] args) {
-//        // Создаем повара
-//        Cook cook = new Cook("Amigo");
+        // Создаем повара
+        Cook firstCook = new Cook("Amigo");
+        Cook secondCook = new Cook("Ellie");
+
+        // Регистрируем поваров
+        StatisticManager.getInstance().register(firstCook);
+        StatisticManager.getInstance().register(secondCook);
+
+        // Создаем список из 5 планшетов
+        List<Tablet> tablets = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Tablet tablet = new Tablet(i);
+            tablets.add(tablet);
+            // Добавляем поваров в качестве наблюдателей
+            tablet.addObserver(firstCook);
+            tablet.addObserver(secondCook);
+        }
+
+        Thread thread = new Thread(new RandomOrderGeneratorTask(tablets, ORDER_CREATING_INTERVAL));
+        thread.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
+        }
+
+        thread.interrupt();
+
 //
-//        // Создаем официанта
+        //        // Создаем официанта
 //        Waiter waiter = new Waiter();
-//
+
 //        // Создаем планшет и присваиваем ему номер
 //        Tablet tablet = new Tablet(5);
 //
