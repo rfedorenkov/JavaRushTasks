@@ -3,7 +3,7 @@ package com.javarush.task.task27.task2712;
 import com.javarush.task.task27.task2712.ad.Advertisement;
 import com.javarush.task.task27.task2712.ad.AdvertisementManager;
 import com.javarush.task.task27.task2712.ad.AdvertisementStorage;
-import com.javarush.task.task27.task2712.kitchen.Cook;
+import com.javarush.task.task27.task2712.ad.StatisticAdvertisementManager;
 import com.javarush.task.task27.task2712.kitchen.Dish;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
@@ -121,5 +121,14 @@ public class RestaurantTest {
         //Ivanov - 6 min
         //Petrov - 5 min
 
+    }
+
+    @Test
+    public void testActiveAdvertisementList() {
+
+        DirectorTablet directorTablet = new DirectorTablet();
+        directorTablet.printActiveVideoSet();
+        System.out.println("========================");
+        directorTablet.printArchivedVideoSet();
     }
 }

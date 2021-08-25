@@ -19,11 +19,14 @@ public enum AdvertisementStorage {
     AdvertisementStorage() {
         // Создем некий объект
         Object someContent = new Object();
+        videos.add(new Advertisement(someContent, "четвертое видео", 400, 2, 10 * 60));
+        videos.add(new Advertisement(someContent, "АрХиВное ВидеО", 100, 0, 15 * 60));
 
         // Создаем 3 рекламных ролика
         videos.add(new Advertisement(someContent, "First Video", 5000, 100, 3 * 60));
         videos.add(new Advertisement(someContent, "Second Video", 100, 10, 15 * 60));
         videos.add(new Advertisement(someContent, "Third Video", 400, 2, 10 * 60));
+
     }
 
     /**

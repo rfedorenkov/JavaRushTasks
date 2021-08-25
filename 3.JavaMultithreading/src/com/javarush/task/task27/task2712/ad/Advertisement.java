@@ -1,5 +1,7 @@
 package com.javarush.task.task27.task2712.ad;
 
+import java.util.Objects;
+
 /**
  * Класс с рекламным объявлением.
  * Реклама - это видео определенной продолжительности.
@@ -13,6 +15,7 @@ public class Advertisement implements Comparable<Advertisement> {
     private String name;
     // Начальная сумма, стоимость рекламы в копейках
     private long initialAmount;
+
     // Количество оплаченных показов
     private int hits;
     // Продолжительность в секундах
@@ -57,6 +60,15 @@ public class Advertisement implements Comparable<Advertisement> {
      */
     public int getDuration() {
         return duration;
+    }
+
+    /**
+     * Геттер для поля hits.
+     *
+     * @return Количество оставшихся роликов.
+     */
+    public int getHits() {
+        return hits;
     }
 
     /**
@@ -113,6 +125,14 @@ public class Advertisement implements Comparable<Advertisement> {
                 Long.compare(this.getCostOfShowingOneSecondInPenny(), other.getCostOfShowingOneSecondInPenny());
     }
 
+    /**
+     * Метод возвращает строковое описание объекта.
+     * Включающая себя имя рекламного ролика, стоимость
+     * показа одного рекламного ролика в копейках и стоимость
+     * показа одной секунды в копейках.
+     *
+     * @return Строковое описание объекта.
+     */
     @Override
     public String toString() {
         return String.format("%s is displaying... %d, %d",

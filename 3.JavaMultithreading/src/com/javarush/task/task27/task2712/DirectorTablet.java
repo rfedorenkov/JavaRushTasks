@@ -1,5 +1,7 @@
 package com.javarush.task.task27.task2712;
 
+import com.javarush.task.task27.task2712.ad.Advertisement;
+import com.javarush.task.task27.task2712.ad.StatisticAdvertisementManager;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
 import java.util.*;
@@ -36,16 +38,20 @@ public class DirectorTablet {
 
     /**
      * Метод выводит список активных роликов и оставшееся
-     * количество показов по каждому.
+     * количество оставшееся количество показов ролика.
      */
     public void printActiveVideoSet() {
+        StatisticAdvertisementManager.getInstance()
+                .getActiveAdvertisementList(true)
+                .forEach(ad -> System.out.printf("%s - %d%n", ad.getName(), ad.getHits()));
     }
 
     /**
      * Метод выводит список неактивных роликов.
-     * Количество показов равно нулю.
      */
     public void printArchivedVideoSet() {
-
+        StatisticAdvertisementManager.getInstance()
+                .getActiveAdvertisementList(false)
+                .forEach(ad -> System.out.println(ad.getName()));
     }
 }
