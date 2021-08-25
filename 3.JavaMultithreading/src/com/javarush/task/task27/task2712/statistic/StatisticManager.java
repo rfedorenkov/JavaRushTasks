@@ -20,7 +20,7 @@ public enum StatisticManager {
     // Хранилище статистики
     private StatisticStorage statisticStorage = new StatisticStorage();
 
-    // Список поваров
+    // Множество поваров
     private Set<Cook> cooks = new HashSet<>();
 
     // Формат даты
@@ -42,6 +42,15 @@ public enum StatisticManager {
      */
     public StatisticStorage getStatisticStorage() {
         return statisticStorage;
+    }
+
+    /**
+     * Метод возвращает множество зарегистрированных поваров.
+     *
+     * @return Множество поваров.
+     */
+    public Set<Cook> getCooks() {
+        return cooks;
     }
 
     /**
@@ -177,4 +186,3 @@ public enum StatisticManager {
         }
     }
 }
-

@@ -15,6 +15,9 @@ public class Cook extends Observable {
     // Имя повара
     private final String name;
 
+    // Занятость повара
+    private boolean busy;
+
     /**
      * Конструктор повара.
      *
@@ -22,6 +25,15 @@ public class Cook extends Observable {
      */
     public Cook(String name) {
         this.name = name;
+    }
+
+    /**
+     * Метод проверяет занят ли повар.
+     *
+     * @return Если повар занят - true.
+     */
+    public boolean isBusy() {
+        return busy;
     }
 
 
@@ -32,8 +44,18 @@ public class Cook extends Observable {
      * @param order Заказ.
      */
     public void startCookingOrder(Order order) {
+        // Принимаем заказ и переводим повара в состояние "Занят"
+        busy = true;
+
         // Выводим в консоль заказ
         ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
+
+        try {
+            // Имитация задержки приготовления
+            Thread.sleep(order.getTotalCookingTime() * 10);
+        } catch (InterruptedException ignored) {
+
+        }
 
         // Регистрируем событие "Повар приготовил заказ"
         StatisticManager.getInstance()
@@ -43,6 +65,9 @@ public class Cook extends Observable {
         // Оповещаем официанта
         setChanged();
         notifyObservers(order);
+
+        // Повар приготовил заказ и переводим повара в состояние "Свободен"
+        busy = false;
     }
 
     @Override
