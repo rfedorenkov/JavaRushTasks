@@ -6,19 +6,21 @@ import com.javarush.task.task27.task2712.kitchen.Order;
 import com.javarush.task.task27.task2712.kitchen.TestOrder;
 
 import java.io.IOException;
-import java.util.Observable;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Класс планшета. Создает заказы.
- * После получения заказа, передает повару. Является наблюдаемым (Observable)
+ * После получения заказа, передает повару.
  */
-public class Tablet extends Observable {
+public class Tablet {
     // Логгер
     private static Logger logger = Logger.getLogger(Tablet.class.getName());
     // Номер планшета
     private final int number;
+    // Очередь заказов
+    private LinkedBlockingQueue<Order> queue;
 
     /**
      * Конструктор планшета.
@@ -27,6 +29,16 @@ public class Tablet extends Observable {
      */
     public Tablet(int number) {
         this.number = number;
+    }
+
+    /**
+     * Сеттер очереди заказа, устанавливается
+     * при создании объекта в классе Restaurant
+     *
+     * @param queue Очередь заказов
+     */
+    public void setQueue(LinkedBlockingQueue<Order> queue) {
+        this.queue = queue;
     }
 
     /**
@@ -85,8 +97,7 @@ public class Tablet extends Observable {
             }
 
             // Оповещаем повара о заказе
-            setChanged();
-            notifyObservers(order);
+            queue.add(order);
         }
     }
 

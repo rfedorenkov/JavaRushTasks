@@ -1,6 +1,5 @@
 package com.javarush.task.task27.task2712.statistic;
 
-import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventDataRow;
 import com.javarush.task.task27.task2712.statistic.event.EventType;
@@ -19,9 +18,6 @@ public enum StatisticManager {
 
     // Хранилище статистики
     private StatisticStorage statisticStorage = new StatisticStorage();
-
-    // Множество поваров
-    private Set<Cook> cooks = new HashSet<>();
 
     // Формат даты
     SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
@@ -44,14 +40,6 @@ public enum StatisticManager {
         return statisticStorage;
     }
 
-    /**
-     * Метод возвращает множество зарегистрированных поваров.
-     *
-     * @return Множество поваров.
-     */
-    public Set<Cook> getCooks() {
-        return cooks;
-    }
 
     /**
      * Метод регистрирует событие в хранилище
@@ -61,16 +49,6 @@ public enum StatisticManager {
     public void register(EventDataRow data) {
         statisticStorage.put(data);
     }
-
-    /**
-     * Метод регистрирует повара (добавляет в Set)
-     *
-     * @param cook Повар.
-     */
-    public void register(Cook cook) {
-        cooks.add(cook);
-    }
-
 
     /**
      * Метод достает из хранилища все данные относящиеся к отображению рекламы.

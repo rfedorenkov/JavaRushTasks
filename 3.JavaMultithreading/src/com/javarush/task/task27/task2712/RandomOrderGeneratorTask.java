@@ -1,10 +1,10 @@
 package com.javarush.task.task27.task2712;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Класс генератора случайных заказов.
+ * Является Producer, т.к. производит заказы.
  */
 public class RandomOrderGeneratorTask implements Runnable {
     // Список всех планшетов

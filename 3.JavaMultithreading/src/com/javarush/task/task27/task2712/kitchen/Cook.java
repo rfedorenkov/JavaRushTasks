@@ -5,18 +5,24 @@ import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 
 import java.util.Observable;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Класс повара. Готовит заказы.
  * Получает заказ от менеджера заказов.
- * После приготовления заказа уведомляет официанта. Является наблюдаемым (Observable).
+ * После приготовления заказа уведомляет официанта.
+ * Является наблюдаемым (Observable) и Consumer, т.к. обрабатывает заказы.
  */
-public class Cook extends Observable {
+public class Cook extends Observable implements Runnable {
+
     // Имя повара
     private final String name;
 
     // Занятость повара
     private boolean busy;
+
+    // Очередь заказов
+    private LinkedBlockingQueue<Order> queue;
 
     /**
      * Конструктор повара.
@@ -36,6 +42,16 @@ public class Cook extends Observable {
         return busy;
     }
 
+
+    /**
+     * Сеттер очереди заказа, устанавливается
+     * при создании объекта в классе Restaurant
+     *
+     * @param queue Очередь заказов
+     */
+    public void setQueue(LinkedBlockingQueue<Order> queue) {
+        this.queue = queue;
+    }
 
     /**
      * Метод начинает приготовление заказа.
@@ -73,5 +89,22 @@ public class Cook extends Observable {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                // Если очередь не пуста
+                if (!queue.isEmpty()) {
+                    if (!this.isBusy()) {
+                        // Берем заказ из очереди
+                        this.startCookingOrder(queue.take());
+                    }
+                }
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {
+            }
+        }
     }
 }
