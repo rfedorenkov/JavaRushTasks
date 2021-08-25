@@ -4,8 +4,9 @@ import com.javarush.task.task27.task2712.ConsoleHelper;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Класс менеджера рекламы.
@@ -37,30 +38,6 @@ public class AdvertisementManager {
     }
 
     /**
-     * Геттер лучшего списка рекламных роликов.
-     *
-     * @return Лучший список рекламных роликов.
-     */
-    public List<Advertisement> getBestAdList() {
-        return bestAdList;
-    }
-
-    /**
-     * Метод выводит на экран отсортированный список рекламных роликов.
-     */
-    public void printSortedBestAd() {
-        // Сортируем список
-        Collections.sort(bestAdList);
-
-        bestAdList.forEach(advertisement -> {
-            // Выводим в консоль
-            ConsoleHelper.writeMessage(advertisement);
-            // Уменьшаем количество показов
-            advertisement.revalidate();
-        });
-    }
-
-    /**
      * Метод выводит на экран список рекламных роликов.
      */
     public void printBestAd() {
@@ -84,9 +61,6 @@ public class AdvertisementManager {
         if (storage.list().isEmpty()) {
             throw new NoVideoAvailableException("No video is available for the order ");
         }
-
-//        makeAllSets(activeList(storage.list()));
-//        printSortedBestAd();
 
         // Формируем список по ревелантности рекламных роликов
         makeAdvertisementList(storage.list());
@@ -119,34 +93,6 @@ public class AdvertisementManager {
         maxDuration = calculateDuration(bestAdList);
     }
 
-
-    /**
-     * Рекурсивное решение задачи.
-     * Создание всех наборов перестановок значений.
-     *
-     * @param list Список предметов.
-     */
-    public void makeAllSets(List<Advertisement> list) {
-        // Проверяем, является ли данный список лучшим решением
-        if (list.size() > 0) {
-            checkSet(list);
-        }
-
-        // Проходимся циклом по всему списку предметов
-        for (int i = 0; i < list.size(); i++) {
-            // Создаем новый список на основе имеющегося
-            List<Advertisement> newItems = new ArrayList<>(list);
-            newItems.remove(i);
-            makeAllSets(newItems);
-        }
-    }
-
-    private List<Advertisement> activeList(List<Advertisement> list) {
-        return list.stream()
-                .filter(Advertisement::isActive)
-                .collect(Collectors.toList());
-    }
-
     /**
      * Считаем суммарную продолжительность рекламных роликов.
      *
@@ -169,19 +115,5 @@ public class AdvertisementManager {
         return list.stream()
                 .mapToLong(Advertisement::getAmountPerOneDisplaying)
                 .sum();
-    }
-
-    /**
-     * Проверяем, является ли данный список лучшим решением.
-     *
-     * @param list Список рекламных роликов.
-     */
-    private void checkSet(List<Advertisement> list) {
-        // Сравниваем продолжительность ролика с максимальной продолжительностью
-        // и стоимость рекламных роликов с лучшей ценой
-        if (calculateDuration(list) <= timeSeconds && calculatePrice(list) > bestPrice) {
-            bestAdList = list;
-            bestPrice = calculatePrice(list);
-        }
     }
 }

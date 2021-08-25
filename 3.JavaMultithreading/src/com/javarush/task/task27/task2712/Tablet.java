@@ -4,6 +4,8 @@ import com.javarush.task.task27.task2712.ad.AdvertisementManager;
 import com.javarush.task.task27.task2712.ad.NoVideoAvailableException;
 import com.javarush.task.task27.task2712.kitchen.Order;
 import com.javarush.task.task27.task2712.kitchen.TestOrder;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.NoAvailableVideoEventDataRow;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -94,6 +96,7 @@ public class Tablet {
                 // Перхватываем и логируем исключение
                 String message = e.getMessage();
                 logger.log(Level.INFO, message + order);
+                StatisticManager.getInstance().register(new NoAvailableVideoEventDataRow(order.getTotalCookingTime()));
             }
 
             // Оповещаем повара о заказе

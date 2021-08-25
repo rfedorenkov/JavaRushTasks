@@ -79,9 +79,5 @@ public class VideoSelectedEventDataRow implements EventDataRow {
                 "optimalVideoSet=" + optimalVideoSet +
                 '}';
     }
-
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
 }
 

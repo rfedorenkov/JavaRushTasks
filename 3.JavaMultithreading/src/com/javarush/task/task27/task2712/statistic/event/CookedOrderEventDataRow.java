@@ -75,8 +75,4 @@ public class CookedOrderEventDataRow implements EventDataRow {
     public int getTime() {
         return cookingTimeSeconds;
     }
-
-    public void setCurrentDate(Date currentDate) {
-        this.currentDate = currentDate;
-    }
 }

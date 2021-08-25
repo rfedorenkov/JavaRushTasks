@@ -55,4 +55,14 @@ public class DirectorTablet {
                 .getAdvertisementList(false)
                 .forEach(ad -> ConsoleHelper.writeMessage(ad.getName()));
     }
+
+    /**
+     * Метод выводит список неактивных роликов.
+     */
+    public void printNoAvailableVideoSet() {
+        StatisticManager.getInstance()
+                .getNoAvailableVideoMap()
+                .forEach((date, message) ->
+                        ConsoleHelper.writeMessage(String.format(Locale.ENGLISH, "%s - %s", date, message)));
+    }
 }

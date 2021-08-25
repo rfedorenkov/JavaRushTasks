@@ -4,7 +4,6 @@ import com.javarush.task.task27.task2712.ConsoleHelper;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
 
-import java.util.Observable;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -13,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * После приготовления заказа уведомляет официанта.
  * Является наблюдаемым (Observable) и Consumer, т.к. обрабатывает заказы.
  */
-public class Cook extends Observable implements Runnable {
+public class Cook implements Runnable {
 
     // Имя повара
     private final String name;
@@ -23,6 +22,8 @@ public class Cook extends Observable implements Runnable {
 
     // Очередь заказов
     private LinkedBlockingQueue<Order> queue;
+    // Очередь приготовленных заказов
+    private LinkedBlockingQueue<Order> cookedQueue;
 
     /**
      * Конструктор повара.
@@ -54,6 +55,16 @@ public class Cook extends Observable implements Runnable {
     }
 
     /**
+     * Сеттер очереди заказа, устанавливается
+     * при создании объекта в классе Restaurant
+     *
+     * @param queue Очередь заказов
+     */
+    public void setCookedQueue(LinkedBlockingQueue<Order> queue) {
+        this.cookedQueue = queue;
+    }
+
+    /**
      * Метод начинает приготовление заказа.
      * Уведомляет официанта о готовности заказа.
      *
@@ -62,6 +73,8 @@ public class Cook extends Observable implements Runnable {
     public void startCookingOrder(Order order) {
         // Принимаем заказ и переводим повара в состояние "Занят"
         busy = true;
+        // Устанавливаем повара, который готовит заказ
+        order.setCook(this);
 
         // Выводим в консоль заказ
         ConsoleHelper.writeMessage(String.format("Start cooking - %s", order));
@@ -79,18 +92,25 @@ public class Cook extends Observable implements Runnable {
                         name, order.getTotalCookingTime() * 60, order.dishes));
 
         // Оповещаем официанта
-        setChanged();
-        notifyObservers(order);
+        cookedQueue.add(order);
 
         // Повар приготовил заказ и переводим повара в состояние "Свободен"
         busy = false;
     }
 
+    /**
+     * Метод возвращает имя повара.
+     *
+     * @return Имя повара.
+     */
     @Override
     public String toString() {
         return name;
     }
 
+    /**
+     * Метод берез из очереди заказ и готовит его.
+     */
     @Override
     public void run() {
         while (true) {
@@ -99,7 +119,7 @@ public class Cook extends Observable implements Runnable {
                 if (!queue.isEmpty()) {
                     if (!this.isBusy()) {
                         // Берем заказ из очереди
-                        this.startCookingOrder(queue.take());
+                        startCookingOrder(queue.take());
                     }
                 }
                 Thread.sleep(10);

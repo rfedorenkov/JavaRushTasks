@@ -2,9 +2,7 @@ package com.javarush.task.task27.task2712;
 
 import com.javarush.task.task27.task2712.kitchen.Cook;
 import com.javarush.task.task27.task2712.kitchen.Order;
-import com.javarush.task.task27.task2712.kitchen.TestOrder;
 import com.javarush.task.task27.task2712.kitchen.Waiter;
-import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Основной класс ресторана.
  * Данный класс создан для автоматизации работы в ресторане.
- * <p>
+ *
  * Задание.
  * Директор ресторана хочет, чтобы:
  * 1) На каждом столике лежал планшет, через который можно было бы сделать заказ;
@@ -22,18 +20,18 @@ import java.util.concurrent.LinkedBlockingQueue;
  * - загрузки повара;
  * - сумму выручки за заказы;
  * - сумму выручки за показы рекламы.
- * <p>
+ *
  * В данной задаче разрабатывается ядро, без UI (User Interface).
- * <p>
+ *
  * Что нужно реализовать:
  * 1.1) Созданный посетителем заказ будет автоматически поступать к повару;
  * 1.2) Повар будет готовить его какое-то время и отмечать приготовленным;
  * 1.3) После этого официант будет относить его.
- * <p>
+ *
  * 2.1) Подобрать нужные рекламные ролики из списка оплаченных;
  * 2.2) Отображать рекламные ролики во время приготовления заказа;
  * 2.3) Максимизировать прибыль от показа рекламы.
- * <p>
+ *
  * 3.1) Подсчитывает статистику;
  * 3.2) Отображает статистику директору.
  */
@@ -43,6 +41,9 @@ public class Restaurant {
 
     // Очередь заказов
     private static final LinkedBlockingQueue<Order> ORDER_QUEUE = new LinkedBlockingQueue<>();
+
+    // Очередь приготовленных заказов
+    private static final LinkedBlockingQueue<Order> COOKED_ORDER_QUEUE = new LinkedBlockingQueue<>();
 
     /**
      * Главный метод класса.
@@ -57,6 +58,8 @@ public class Restaurant {
         // Устанавливаем очередь заказов
         firstCook.setQueue(ORDER_QUEUE);
         secondCook.setQueue(ORDER_QUEUE);
+        firstCook.setCookedQueue(COOKED_ORDER_QUEUE);
+        secondCook.setCookedQueue(COOKED_ORDER_QUEUE);
 
         // Создаем список из 5 планшетов
         List<Tablet> tablets = new ArrayList<>();
@@ -68,6 +71,11 @@ public class Restaurant {
 
         // Создаем официанта
         Waiter waiter = new Waiter();
+        waiter.setQueue(COOKED_ORDER_QUEUE);
+        // Создаем поток официанта
+        Thread waiterThread = new Thread(waiter);
+        waiterThread.setDaemon(true);
+        waiterThread.start();
 
         Thread thread = new Thread(new RandomOrderGeneratorTask(tablets, ORDER_CREATING_INTERVAL));
         thread.start();
@@ -81,8 +89,9 @@ public class Restaurant {
         secondCookThread.setDaemon(true);
         secondCookThread.start();
 
+        // Ждем 1 секунду и прерываем
         try {
-            Thread.sleep(1000);
+            Thread.sleep(10000);
         } catch (InterruptedException ignored) {
         }
 
@@ -91,59 +100,37 @@ public class Restaurant {
 
         // Создаем планшет директора
         DirectorTablet directorTablet = new DirectorTablet();
-        // Вызываем 4 метода, для отбора статистики
+        // Выводим статистику
         directorTablet.printAdvertisementProfit();
         directorTablet.printCookWorkloading();
         directorTablet.printActiveVideoSet();
         directorTablet.printArchivedVideoSet();
+        directorTablet.printNoAvailableVideoSet();
 
     }
 }
 
-//Ресторан(22)
-//К сожалению, заказы все еще не готовятся параллельно. Вот как работает наш трэд из предыдущего задания.
-//Он находит повара, потом находит заказ, отдает заказ повару методом startCookingOrder,
-// потом ждет окончания приготовления, и только после этого переходит к следующему заказу.
-// Так происходит потому, что все действия внутри одного трэда - последовательные.
-// Мы не можем в пределах одного трэда выполнять параллельные процессы.
-
-//Нам нужна стандартная Producer-Consumer реализация.
-//RandomOrderGeneratorTask у нас Producer, т.к. производит заказы.
-//Cook - это Consumer, т.к. обрабатывает заказы.
+//Ресторан(23)
+//Это всё! Красоту можешь наводить самостоятельно.
 //
-
-//1. Перенеси поле-очередь из OrderManager в Restaurant, сделай ее приватной константой.
-
-//2. Добавь поле-очередь LinkedBlockingQueue queue и сеттер в класс Cook,
-// сразу после создания повара, используя созданный сеттер, установи ему константу
-// из п.1 в качестве значения для созданного поля.
-
-//3. Tablet не должен быть Observable. Убери все зависимости.
-
-//4. В Tablet добавь поле-очередь LinkedBlockingQueue queue,
-// создай сеттер для него и установи ссылку на очередь (п.1) при создании планшета.
-
-//5. В Tablet часть логики, которая уведомляет Observer-а, замени на такую, которая добавляет заказ в очередь.
+//Например:
+//1. Сделай Waiter таском, чтобы он работал как трэд (убери Observer).
+// Сделай очередь приготовленных заказов, официант пусть берет заказы из нее и относит на столы.
+//2. Запиши в ивент-лог событие NoAvailableVideoEventDataRow тогда,
+// когда невозможно подобрать видео. Выдавай это событие директору.
+//3. Напиши UI, например, на Swing.
 //
-//6. Из класса StatisticManager удали сет поваров, его геттер и метод register(Cook cook).
-
-
-//7. Сделай класс Cook таском (Runnable).
-// Перенеси логику из трэда внутри конструктора OrderManager в метод run класса Cook.
-
-//8. Удали класс OrderManager и в методе main исправь зависимость Observer-Observable.
-
-//9. В методе main создай и запусти трэды на основании тасок Cook.
+//Твои достижения:
+//1. Разобрался с паттерном Observer.
+//2. Прокачал скилл написания рекурсии.
+//3. Познакомился с методом реализации ведения статистики.
+//4. Стал больше знать и уметь.
+//5. Увидел, как раскладывать задачу на подзадачи.
+//6. Продвинулся на шаг ближе к работе джава программистом.
+//
+//Поздравляю!
 //
 //
 //Requirements:
-//1. В классе Restaurant должно быть создано private final static поле ORDER_QUEUE типа LinkedBlockingQueue.
-//2. В классе Cook должно быть создано private поле queue типа LinkedBlockingQueue и сеттер.
-//3. В классе Tablet должно быть создано private поле queue типа LinkedBlockingQueue и сеттер.
-
-//4. Класс Tablet не должен быть потомком класса Observable.
-
-//5. Класс Cook должен поддерживать интерфейс Runnable.
-//6. Общая логика приготовления заказов и показа рекламы должна быть сохранена.
-//7. Класс OrderManager должен быть удален.
+//1. Ты отлично поработал. Большая задача пройдена!
 

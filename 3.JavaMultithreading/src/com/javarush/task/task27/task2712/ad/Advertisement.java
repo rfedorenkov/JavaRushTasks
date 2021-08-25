@@ -94,6 +94,7 @@ public class Advertisement implements Comparable<Advertisement> {
      */
     public void revalidate() throws UnsupportedOperationException {
         if (!isActive()) {
+            System.exit(0);
             throw new UnsupportedOperationException("Promotional video not available (hits = 0)");
         }
         hits--;

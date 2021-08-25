@@ -1,9 +1,6 @@
 package com.javarush.task.task27.task2712.statistic;
 
-import com.javarush.task.task27.task2712.statistic.event.CookedOrderEventDataRow;
-import com.javarush.task.task27.task2712.statistic.event.EventDataRow;
-import com.javarush.task.task27.task2712.statistic.event.EventType;
-import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
+import com.javarush.task.task27.task2712.statistic.event.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -123,6 +120,23 @@ public enum StatisticManager {
 
         // Возвращаем результат
         return cookWorkLoadingMap;
+    }
+
+    public Map<String, String> getNoAvailableVideoMap() {
+        //printNoAvailableVideoSet
+        Map<String, String> noAvailableVideoMap = new TreeMap<>();
+        List<EventDataRow> noAvailableVideos = statisticStorage.getStorage(EventType.NO_AVAILABLE_VIDEO);
+        // Проходимся по списку
+        for (EventDataRow dataRow : noAvailableVideos) {
+            // Приводим к классу VideoSelectedEventDataRow
+            NoAvailableVideoEventDataRow video = (NoAvailableVideoEventDataRow) dataRow;
+
+            // Получаем дату
+            String date = format.format(video.getDate());
+            // Добавляем результат, если присутствует, то складываем
+            noAvailableVideoMap.merge(date, video.toString(), (s, s2) -> s + s2);
+        }
+        return noAvailableVideoMap;
     }
 
     /**

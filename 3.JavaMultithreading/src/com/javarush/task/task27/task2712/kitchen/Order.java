@@ -17,6 +17,9 @@ public class Order {
     // Список выбранных блюд
     protected List<Dish> dishes;
 
+    // Повар, который приготовил заказ
+    private Cook cook;
+
     /**
      * Конструктор заказа.
      *
@@ -36,6 +39,24 @@ public class Order {
         return tablet;
     }
 
+
+    /**
+     * Метод устанавливает повара, который готовит заказ.
+     *
+     * @param cook Повар
+     */
+    public void setCook(Cook cook) {
+        this.cook = cook;
+    }
+
+    /**
+     * Геттер возвращает повара, который приготовил заказ.
+     *
+     * @return Повар, который приготовил заказ.
+     */
+    public Cook getCook() {
+        return cook;
+    }
 
     /**
      * Геттер списка выбранных блюд.
