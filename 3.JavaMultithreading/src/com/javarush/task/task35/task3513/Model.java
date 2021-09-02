@@ -12,6 +12,10 @@ public class Model {
     private static final int FIELD_WIDTH = 4;
     // Двумерный массив игрового поля состоящий из плиток (Tile)
     private Tile[][] gameTiles;
+    // Счет
+    protected int score;
+    // Максимальный вес плитки
+    protected int maxTile;
 
     /**
      * Конструктор объекта.
@@ -27,6 +31,9 @@ public class Model {
      * Создает две плитки случайным образом.
      */
     protected void resetGameTiles() {
+        // Инициализируем счет и максимальный вес плитки
+        score = 0;
+        maxTile = 0;
         // Инициализируем двумерный массив
         gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
         // Заполняем его пустыми плитками
@@ -76,5 +83,42 @@ public class Model {
                         .forEach(emptyTilesList::add));
         // Возвращаем список
         return emptyTilesList;
+    }
+
+    /**
+     * Метод сжимает массив плиток, таким образом, чтобы все
+     * пустые плитки были справа.
+     *
+     * @param tiles Массив плиток.
+     */
+    private void compressTiles(Tile[] tiles) {
+        for (int i = 0; i < tiles.length - 1; i++) {
+            for (int j = i; j < tiles.length; j++) {
+                if (tiles[i].isEmpty()) {
+                    Tile tmp = tiles[j];
+                    tiles[j] = tiles[i];
+                    tiles[i] = tmp;
+                }
+            }
+        }
+    }
+
+    /**
+     * Метод слияния плиток в массиве плиток одних номиналов.
+     *
+     * @param tiles Массив плиток.
+     */
+    private void mergeTiles(Tile[] tiles) {
+        for (int i = 0; i < tiles.length - 1; i++) {
+            if (tiles[i].value == tiles[i + 1].value) {
+                tiles[i].value += tiles[i + 1].value;
+                score += tiles[i].value;
+                if (tiles[i].value > maxTile) {
+                    maxTile = tiles[i].value;
+                }
+                tiles[i + 1].value = 0;
+            }
+        }
+        compressTiles(tiles);
     }
 }
