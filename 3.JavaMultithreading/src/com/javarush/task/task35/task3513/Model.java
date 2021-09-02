@@ -47,6 +47,22 @@ public class Model {
         addTile();
     }
 
+
+    /**
+     * Метод двигает массив влево, если это возможно, то добавляет новую плитку.
+     */
+    public void left() {
+        boolean changes = false;
+        for (Tile[] gameTile : gameTiles) {
+            changes = mergeTiles(gameTile);
+            changes = compressTiles(gameTile);
+        }
+        if (changes) {
+            addTile();
+        }
+        mergeTiles(gameTiles[0]);
+    }
+
     /**
      * Метод проверяет какие плитки пустуют, и если такие имеются,
      * меняют вес одной из них случайным образом (на 2 или 4).
@@ -90,35 +106,78 @@ public class Model {
      * пустые плитки были справа.
      *
      * @param tiles Массив плиток.
+     * @return Если были изменения массива - true, иначе false.
      */
-    private void compressTiles(Tile[] tiles) {
-        for (int i = 0; i < tiles.length - 1; i++) {
-            for (int j = i; j < tiles.length; j++) {
+    private boolean compressTiles(Tile[] tiles) {
+        boolean changes = false;
+        for (int i = 0; i < FIELD_WIDTH - 1; i++) {
+            for (int j = i; j < FIELD_WIDTH; j++) {
                 if (tiles[i].isEmpty()) {
-                    Tile tmp = tiles[j];
-                    tiles[j] = tiles[i];
-                    tiles[i] = tmp;
+                    if (!tiles[j].isEmpty()) {
+                        Tile tmp = tiles[j];
+                        tiles[j] = tiles[i];
+                        tiles[i] = tmp;
+                        changes = true;
+                    }
                 }
             }
         }
+        return changes;
     }
 
     /**
      * Метод слияния плиток в массиве плиток одних номиналов.
      *
      * @param tiles Массив плиток.
+     * @return Если были изменения массива - true, иначе false.
      */
-    private void mergeTiles(Tile[] tiles) {
-        for (int i = 0; i < tiles.length - 1; i++) {
-            if (tiles[i].value == tiles[i + 1].value) {
-                tiles[i].value += tiles[i + 1].value;
-                score += tiles[i].value;
-                if (tiles[i].value > maxTile) {
-                    maxTile = tiles[i].value;
+    private boolean mergeTiles(Tile[] tiles) {
+        boolean changes = false;
+        for (int i = 0; i < FIELD_WIDTH - 1; i++) {
+            if (tiles[i].value > 0) {
+                if (tiles[i].value == tiles[i + 1].value) {
+                    tiles[i].value += tiles[i + 1].value;
+                    score += tiles[i].value;
+                    if (tiles[i].value > maxTile) {
+                        maxTile = tiles[i].value;
+                    }
+                    tiles[i + 1].value = 0;
+                    changes = true;
                 }
-                tiles[i + 1].value = 0;
             }
         }
         compressTiles(tiles);
+        return changes;
+    }
+
+    public static void main(String[] args) {
+        Model model = new Model();
+// для compress
+        Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
+                {new Tile(4), new Tile(0), new Tile(0), new Tile(4)},
+                {new Tile(0), new Tile(4), new Tile(4), new Tile(0)},
+                {new Tile(0), new Tile(2), new Tile(0), new Tile(2)}};
+        // для merge
+        //   Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
+        //           {new Tile(4), new Tile(2), new Tile(2), new Tile(4)},
+        //           {new Tile(4), new Tile(4), new Tile(4), new Tile(0)},
+        //          {new Tile(4), new Tile(4), new Tile(4), new Tile(4)}};
+        //
+        // До
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(Arrays.toString(tiles[i]));
+        }
+        System.out.println();
+        //
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(model.compressTiles(tiles[i]));
+//             System.out.println(model.mergeTiles(tiles[i]));
+        }
+        System.out.println();
+        //После
+        for (int i = 0; i < tiles.length; i++) {
+            System.out.println(Arrays.toString(tiles[i]));
+        }
     }
 }
+
