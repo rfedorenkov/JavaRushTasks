@@ -2,7 +2,6 @@ package com.javarush.task.task35.task3513;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,6 +23,16 @@ public class Model {
      */
     public Model() {
         resetGameTiles();
+    }
+
+
+    /**
+     * Геттер игрового поля.
+     *
+     * @return Двумерный массив игрового поля состоящий из плиток (Tile)
+     */
+    public Tile[][] getGameTiles() {
+        return gameTiles;
     }
 
     /**
@@ -48,6 +57,31 @@ public class Model {
         addTile();
     }
 
+    /**
+     * Метод проверяет, можно ли с текущей позиции сделать ход так,
+     * чтобы состояние игрового поля изменилось.
+     *
+     * @return Если состояние игрового поля изменилось - true, иначе - false;
+     */
+    public boolean canMove() {
+        // Проверяем есть ли свободные ячейки
+        if (getEmptyTiles().size() > 0) {
+            // Если есть, возвращаем true
+            return true;
+        }
+        // В цикле проверяем
+        for (int i = 0; i < gameTiles.length - 1; i++) {
+            for (int j = 0; j < gameTiles[i].length - 1; j++) {
+                // Есть ли есть одинаковые ячейки по вертикали и горизонтали
+                if (gameTiles[i][j].equals(gameTiles[i + 1][j]) || gameTiles[i][j].equals(gameTiles[i][j + 1])) {
+                    // Возвращаем true
+                    return true;
+                }
+            }
+        }
+        // Если проверки не прошли, возвращаем false
+        return false;
+    }
 
     /**
      * Метод двигает массив влево, если это возможно, то добавляет новую плитку.
@@ -184,7 +218,7 @@ public class Model {
         boolean changes = false;
         for (int i = 0; i < FIELD_WIDTH - 1; i++) {
             if (tiles[i].value > 0) {
-                if (tiles[i].value == tiles[i + 1].value) {
+                if (tiles[i].equals(tiles[i + 1])) {
                     tiles[i].value += tiles[i + 1].value;
                     score += tiles[i].value;
                     if (tiles[i].value > maxTile) {
@@ -205,6 +239,13 @@ public class Model {
                 {new Tile(4), new Tile(0), new Tile(0), new Tile(4)},
                 {new Tile(0), new Tile(4), new Tile(4), new Tile(0)},
                 {new Tile(0), new Tile(2), new Tile(0), new Tile(2)}};
+
+        Tile[][] tiles2 = new Tile[][]{
+                {new Tile(16), new Tile(8), new Tile(4), new Tile(2)},
+                {new Tile(32), new Tile(16), new Tile(8), new Tile(4)},
+                {new Tile(64), new Tile(32), new Tile(16), new Tile(8)},
+                {new Tile(128), new Tile(64), new Tile(32), new Tile(16)}};
+
         model.gameTiles = tiles;
 
         Arrays.stream(model.gameTiles)
@@ -218,6 +259,9 @@ public class Model {
         Arrays.stream(model.gameTiles)
                 .map(Arrays::toString)
                 .forEach(System.out::println);
+
+        model.gameTiles = tiles2;
+        System.out.println(model.canMove());
     }
 }
 
