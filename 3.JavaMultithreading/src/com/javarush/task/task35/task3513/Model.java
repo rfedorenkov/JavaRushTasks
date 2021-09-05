@@ -3,6 +3,7 @@ package com.javarush.task.task35.task3513;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Класс содержит игровую логику и хранит игровое поле.
@@ -17,11 +18,22 @@ public class Model {
     // Максимальный вес плитки
     protected int maxTile;
 
+    // Стек для хранения предыдущих состояний игрового поля
+    private Stack<Tile[][]> previousStates = new Stack<>();
+    // Счет для хранения предыдущих счетов
+    private Stack<Integer> previousScores = new Stack<>();
+    // Можно ли сохранить
+    private boolean isSaveNeeded = true;
+
     /**
      * Конструктор объекта.
      * Создает новое игровое поле.
      */
     public Model() {
+        // Инициализируем счет и максимальный вес плитки
+        score = 0;
+        maxTile = 0;
+        // Обновляем игровое поле
         resetGameTiles();
     }
 
@@ -41,9 +53,6 @@ public class Model {
      * Создает две плитки случайным образом.
      */
     protected void resetGameTiles() {
-        // Инициализируем счет и максимальный вес плитки
-        score = 0;
-        maxTile = 0;
         // Инициализируем двумерный массив
         gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
         // Заполняем его пустыми плитками
@@ -193,13 +202,18 @@ public class Model {
      */
     private boolean compressTiles(Tile[] tiles) {
         boolean changes = false;
+        // В цикле проходимся по массиву
         for (int i = 0; i < FIELD_WIDTH - 1; i++) {
             for (int j = i; j < FIELD_WIDTH; j++) {
+                // Если поле пустое
                 if (tiles[i].isEmpty()) {
+                    // И соседнее поле не пустое
                     if (!tiles[j].isEmpty()) {
+                        // Меняем местами
                         Tile tmp = tiles[j];
                         tiles[j] = tiles[i];
                         tiles[i] = tmp;
+                        // Регистрируем изменение
                         changes = true;
                     }
                 }
@@ -216,52 +230,68 @@ public class Model {
      */
     private boolean mergeTiles(Tile[] tiles) {
         boolean changes = false;
+        // В цикле проходимся по массиву
         for (int i = 0; i < FIELD_WIDTH - 1; i++) {
+            // Если вес плитки больше 0
             if (tiles[i].value > 0) {
+                // И если соседние плитки одинаковы
                 if (tiles[i].equals(tiles[i + 1])) {
+                    // Суммируем первую плитку
                     tiles[i].value += tiles[i + 1].value;
+                    // Увеличиваем счет
                     score += tiles[i].value;
+                    // Если вес текущий плитки больше максимального веса
                     if (tiles[i].value > maxTile) {
+                        // Обновляем максимальный вес
                         maxTile = tiles[i].value;
                     }
+                    // Обнуляем вес соседней плитки
                     tiles[i + 1].value = 0;
+                    // Регистрируем изменение
                     changes = true;
                 }
             }
         }
+        // Сжимаем игровое поле
         compressTiles(tiles);
         return changes;
     }
 
-    public static void main(String[] args) {
-        Model model = new Model();
-        Tile[][] tiles = new Tile[][]{{new Tile(8), new Tile(0), new Tile(0), new Tile(0)},
-                {new Tile(4), new Tile(0), new Tile(0), new Tile(4)},
-                {new Tile(0), new Tile(4), new Tile(4), new Tile(0)},
-                {new Tile(0), new Tile(2), new Tile(0), new Tile(2)}};
+    /**
+     * Метод сохраняет текущее игровое состояние и счет в стеки
+     * и устанавливает флаг isSaveNeeded равным false.
+     *
+     * @param gameTiles Игровое поле
+     */
+    private void saveState(Tile[][] gameTiles) {
+        // Создаем новое игровое поле (двумерный массив)
+        Tile[][] savedGameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH; j++) {
+                // Заполняем его новыми объектами
+                savedGameTiles[i][j] = new Tile(gameTiles[i][j].value);
+            }
+        }
 
-        Tile[][] tiles2 = new Tile[][]{
-                {new Tile(16), new Tile(8), new Tile(4), new Tile(2)},
-                {new Tile(32), new Tile(16), new Tile(8), new Tile(4)},
-                {new Tile(64), new Tile(32), new Tile(16), new Tile(8)},
-                {new Tile(128), new Tile(64), new Tile(32), new Tile(16)}};
+        // Добавляем созданное игровое поле в стек
+        previousStates.push(savedGameTiles);
+        // Добавляем счет в стек
+        previousScores.push(score);
+        // Устанавливаем флаг
+        isSaveNeeded = false;
+    }
 
-        model.gameTiles = tiles;
-
-        Arrays.stream(model.gameTiles)
-                .map(Arrays::toString)
-                .forEach(System.out::println);
-
-        System.out.println();
-
-        model.up();
-
-        Arrays.stream(model.gameTiles)
-                .map(Arrays::toString)
-                .forEach(System.out::println);
-
-        model.gameTiles = tiles2;
-        System.out.println(model.canMove());
+    /**
+     * Метод восстанавливает предыдущее  игровое состояние и счет из стека.
+     */
+    public void rollback() {
+        // Проверяем, что стеки не пусты
+        if (!previousStates.isEmpty() && !previousScores.isEmpty()) {
+            // Восстанавливаем игровое поле из стека
+            gameTiles = previousStates.pop();
+            // Восстанавливаем счет из стека
+            score = previousScores.pop();
+        }
     }
 }
 

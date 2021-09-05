@@ -85,11 +85,22 @@ public class Tile {
         }
     }
 
+    /**
+     * Переопределяем метод, чтобы он возвращал вес плитки.
+     *
+     * @return Строковый вариант веса плитки.
+     */
     @Override
     public String toString() {
         return Integer.toString(value);
     }
 
+    /**
+     * Переопределенный метод, сравнивает вес плитки.
+     *
+     * @param o Объект сравнения.
+     * @return Результат сравнения объектов.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +109,11 @@ public class Tile {
         return value == tile.value;
     }
 
+    /**
+     * Переопределенный метод, возвращает хэшкод объекта по весу плитки.
+     *
+     * @return Хэшкод объекта по весу плитки.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(value);
