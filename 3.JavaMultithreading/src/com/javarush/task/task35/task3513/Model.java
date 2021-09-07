@@ -96,6 +96,11 @@ public class Model {
      * Метод двигает массив влево, если это возможно, то добавляет новую плитку.
      */
     public void left() {
+        // Проверяем, нужно ли сохранение
+        if (isSaveNeeded) {
+            // Если нужно, то сохраняем игровое поле в стек
+            saveState(gameTiles);
+        }
         boolean changes = false;
         for (Tile[] gameTile : gameTiles) {
             if (compressTiles(gameTile) | mergeTiles(gameTile)) {
@@ -105,12 +110,15 @@ public class Model {
         if (changes) {
             addTile();
         }
+        isSaveNeeded = true;
     }
 
     /**
      * Метод двигает массив вправо, если это возможно, то добавляет новую плитку.
      */
     public void right() {
+        // Сохраняем игровое поле
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         left();
@@ -122,6 +130,8 @@ public class Model {
      * Метод двигает массив вверх, если это возможно, то добавляет новую плитку.
      */
     public void up() {
+        // Сохраняем игровое поле
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
@@ -133,6 +143,8 @@ public class Model {
      * Метод двигает массив вниз, если это возможно, то добавляет новую плитку.
      */
     public void down() {
+        // Сохраняем игровое поле
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         left();
         gameTiles = rotateClockwise(gameTiles);
@@ -293,5 +305,22 @@ public class Model {
             score = previousScores.pop();
         }
     }
-}
 
+    /**
+     * Метод вызывает один из методов движения случайным образом.
+     */
+    public void randomMove() {
+        // Получаем число от 0 до 3
+        int n = ((int) (Math.random() * 100)) % 4;
+        // Вызываем метод в зависимости от числа
+        if (n == 0) {
+            left();
+        } else if (n == 1) {
+            right();
+        } else if (n == 2) {
+            up();
+        } else {
+            down();
+        }
+    }
+}

@@ -1,6 +1,5 @@
 package com.javarush.task.task35.task3513;
 
-import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -100,6 +99,11 @@ public class Controller extends KeyAdapter {
                 case KeyEvent.VK_DOWN:
                     model.down();
                     break;
+                case KeyEvent.VK_Z:
+                    model.rollback();
+                    break;
+                case KeyEvent.VK_R:
+                    model.randomMove();
             }
         }
 
