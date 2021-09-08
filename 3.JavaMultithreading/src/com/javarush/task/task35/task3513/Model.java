@@ -1,9 +1,6 @@
 package com.javarush.task.task35.task3513;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Класс содержит игровую логику и хранит игровое поле.
@@ -322,6 +319,23 @@ public class Model {
         } else {
             down();
         }
+    }
+
+    /**
+     * Метод выбирает лучший из возможных ходов и выполняет его.
+     */
+    public void autoMove() {
+        // Создаем очередь размером 4 элемента и с параметром,
+        // для того, чтобы вверху очереди всегда был максимальный элемент
+        PriorityQueue<MoveEfficiency> moveEfficiencies = new PriorityQueue<>(4, Collections.reverseOrder());
+        // Заполняем очередь четырьмя объектами (по одному на каждый вариант хода)
+        moveEfficiencies.offer(getMoveEfficiency(this::left));
+        moveEfficiencies.offer(getMoveEfficiency(this::right));
+        moveEfficiencies.offer(getMoveEfficiency(this::up));
+        moveEfficiencies.offer(getMoveEfficiency(this::down));
+
+        // Доставем верхний элемент и выполняем ход
+        moveEfficiencies.peek().getMove().move();
     }
 
     /**

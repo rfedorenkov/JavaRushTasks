@@ -56,9 +56,9 @@ public class MoveEfficiency implements Comparable<MoveEfficiency>{
      */
     @Override
     public int compareTo(MoveEfficiency moveEfficiency) {
-        // Сраниваем количество пустых плиток, если количество равно,
-        // то сравниваем счет. Если и счет равный, то вернем 0.
+        // Сраниваем количество пустых плиток
         int compare = Integer.compare(this.numberOfEmptyTiles, moveEfficiency.numberOfEmptyTiles);
+        // Если количество одинаково, то сравниваем счет
         return compare == 0 ? Integer.compare(this.score, moveEfficiency.score) : compare;
     }
 }
