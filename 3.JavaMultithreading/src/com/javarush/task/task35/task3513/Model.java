@@ -323,4 +323,49 @@ public class Model {
             down();
         }
     }
+
+    /**
+     * Метод возвращает true, в случае, если вес плиток отличается
+     * от веса плиток в верхнем массиве стека previousStates.
+     *
+     * @return Возвращает true, если вес плиток отличается. Иначе - false.
+     */
+    private boolean hasBoardChanged() {
+        // Получаем игровое поле из стека
+        Tile[][] previous = previousStates.peek();
+        // Общий вес плиток из стека
+        int previousTotalScore = 0;
+        // Текущий вес плиток
+        int currentTotalScore = 0;
+        // Проходимся по циклу и делаем подсчет
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH; j++) {
+                previousTotalScore += previous[i][j].value;
+                currentTotalScore += gameTiles[i][j].value;
+            }
+        }
+        return currentTotalScore != previousTotalScore;
+    }
+
+    /**
+     * Метод получает объект MoveEfficiency в зависимости от переданного хода.
+     *
+     * @param move Ход.
+     * @return Объект типа MoveEfficiency описывающий эффективность переданного хода.
+     */
+    private MoveEfficiency getMoveEfficiency(Move move) {
+        // Делаем ход
+        move.move();
+        // Запоминаем было ли изменение хода
+        boolean boardChanged = hasBoardChanged();
+        // Возвращаем игровое поле назад
+        rollback();
+        // Если изменения не было
+        if (!boardChanged) {
+            // Возвращаем объект MoveEfficiency с параметрами пустых плиток -1 и счет 0
+            return new MoveEfficiency(-1, 0, move);
+        }
+        // Возвращаем объект MoveEfficiency с текущими параметрами игрового поля
+        return new MoveEfficiency(getEmptyTiles().size(), score, move);
+    }
 }
