@@ -30,6 +30,7 @@ import java.io.RandomAccessFile;
  * переданного файла строку 'false'.
 */
 public class Solution {
+
     public static void main(String... args) {
         try (RandomAccessFile raf = new RandomAccessFile(args[0], "rw")) {
             long number = Long.parseLong(args[1]);

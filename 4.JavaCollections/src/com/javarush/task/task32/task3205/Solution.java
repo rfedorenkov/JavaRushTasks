@@ -39,6 +39,7 @@ public class Solution {
         inside voidMethodWithoutArgs
         voidMethodWithIntArg out
         */
+
     }
 
     public static SomeInterfaceWithMethods getProxy() {
