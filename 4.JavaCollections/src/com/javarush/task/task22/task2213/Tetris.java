@@ -5,6 +5,9 @@ package com.javarush.task.task22.task2213;
  */
 public class Tetris {
 
+    // Игра
+    static Tetris game;
+
     // Поле
     private Field field;
     // Фигура
@@ -61,6 +64,9 @@ public class Tetris {
      * Запуск игры Tetris.
      */
     public static void main(String[] args) {
-
+        // Инициализация игры
+        game = new Tetris();
+        // Запуск игры
+        game.run();
     }
 }
