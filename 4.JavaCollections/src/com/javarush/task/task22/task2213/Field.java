@@ -46,4 +46,39 @@ public class Field {
     public int[][] getMatrix() {
         return matrix;
     }
+
+    /**
+     * Метод отображает на экран своё текущее состояние.
+     */
+    public void print() {
+
+    }
+
+    /**
+     * Метод удаляет из матрицы полностью заполненные строки
+     * и сдвигает вышележащие строки вниз.
+     */
+    public void removeFullLines() {
+
+    }
+
+    /**
+     * Метод возвращает значение, которое находится в матрице с координатами x и y.
+     * @param x Координата x.
+     * @param y Координата y.
+     * @return Значение, которое находится в матрице по указанным координатам.
+     */
+    public Integer getValue(int x, int y) {
+        return null;
+    }
+
+    /**
+     * Метод устанавливает переданное значение в ячейку матрицы с координатами x и y.
+     * @param x Координата x.
+     * @param y Координата y.
+     * @param value Значение.
+     */
+    public void setValue(int x, int y, int value) {
+
+    }
 }
