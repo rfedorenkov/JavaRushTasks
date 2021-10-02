@@ -11,13 +11,6 @@ public class Tetris {
     private Figure figure;
 
     /**
-     * Запуск игры Tetris.
-     */
-    public static void main(String[] args) {
-
-    }
-
-    /**
      * Геттер фигуры.
      * @return figure.
      */
@@ -47,5 +40,27 @@ public class Tetris {
      */
     public void setField(Field field) {
         this.field = field;
+    }
+
+    /**
+     * Метод отвечает за всю игру.
+     */
+    public void run() {
+
+    }
+
+    /**
+     * Метод отвечает за один шаг в игре.
+     */
+    public void step() {
+
+    }
+
+
+    /**
+     * Запуск игры Tetris.
+     */
+    public static void main(String[] args) {
+
     }
 }
