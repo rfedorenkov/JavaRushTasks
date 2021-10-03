@@ -49,9 +49,15 @@ public class Field {
 
     /**
      * Метод отображает на экран своё текущее состояние.
+     * Выводит прямоугольник состоящий из символов '.' и 'X'.
      */
     public void print() {
-
+        for (int y = 0; y < matrix.length; y++) {
+            for (int x = 0; x < matrix[y].length; x++) {
+                System.out.print(matrix[y][x] == 0 ? "." : "X");
+            }
+            System.out.println();
+        }
     }
 
     /**

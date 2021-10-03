@@ -9,7 +9,7 @@ public class Figure {
     private int y;
 
     // Форма фигуры (состоящий из единиц и нулей)
-    private int[][] matrix = new int[3][3];
+    private int[][] matrix;
 
     /**
      *
