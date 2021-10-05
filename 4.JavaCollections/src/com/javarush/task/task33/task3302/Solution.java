@@ -33,7 +33,7 @@ public class Solution {
 
         StringWriter writer = new StringWriter();
         convertToJSON(writer, cat);
-        System.out.println(writer.toString());
+        System.out.println(writer);
     }
 
     public static void convertToJSON(StringWriter writer, Object object) throws IOException {
