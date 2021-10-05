@@ -1,132 +1,131 @@
 package com.javarush.task.task22.task2213;
 
+
 /**
- * Класс фигуры.
+ * Класс Figure описывает фигурку тетриса
  */
 public class Figure {
+    // Матрица которая определяет форму фигурки: 1 - клетка не пустая, 0 - пустая
+    private int[][] matrix;
     // Координаты
     private int x;
     private int y;
 
-    // Форма фигуры (состоящий из единиц и нулей)
-    private int[][] matrix;
-
-    /**
-     *
-     * @param x
-     * @param y
-     * @param matrix
-     */
     public Figure(int x, int y, int[][] matrix) {
         this.x = x;
         this.y = y;
         this.matrix = matrix;
     }
 
-    /**
-     * Геттер координаты x.
-     * @return Координату x.
-     */
     public int getX() {
         return x;
     }
 
-    /**
-     * Геттер координаты y.
-     * @return Координату y.
-     */
     public int getY() {
         return y;
     }
 
-    /**
-     * Геттер формы фигуры.
-     * @return Матрицу matrix.
-     */
     public int[][] getMatrix() {
         return matrix;
     }
 
-    //Тетрис(16)
-    //Напиши свою реализацию методов left(), right(), up(), down() в классе Figure.
-    //Подумай, что должны делать эти методы?
-    //Обрати внимание: в процессе реализации некоторых методов тебе надо будет проверять нарушение границ игрового поля,
-    // делать это нужно с помощью существующего метода isCurrentPositionAvailable().
-    //
-    //
-    //Requirements:
-    //1. Метод left() должен уменьшать значение поля x на единицу, если это возможно(не нарушены границы игрового поля).
-    //2. Метод right() должен увеличивать значение поля x на единицу, если это возможно(не нарушены границы игрового поля).
-    //3. Метод up() должен уменьшать значение поля y на единицу.
-    //4. Метод down() должен увеличивать значение поля y на единицу.
+    /**
+     * Поворачиваем фигурку.
+     * Для простоты - просто вокруг главной диагонали.
+     */
+    public void rotate() {
+        int[][] matrix2 = new int[3][3];
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                matrix2[i][j] = matrix[j][i];
+            }
+        }
+
+        matrix = matrix2;
+    }
 
     /**
-     * Движение фигуры влево.
+     * Двигаем фигурку влево.
+     * Проверяем не вылезла ли она за границу поля и/или не залезла ли на занятые клетки.
      */
     public void left() {
         x--;
-        if (!isCurrentPositionAvailable()) {
+        if (!isCurrentPositionAvailable())
             x++;
-        }
     }
 
     /**
-     * Движение фигуры вправо.
+     * Двигаем фигурку вправо.
+     * Проверяем не вылезла ли она за границу поля и/или не залезла ли на занятые клетки.
      */
     public void right() {
         x++;
-        if (!isCurrentPositionAvailable()) {
+        if (!isCurrentPositionAvailable())
             x--;
-        }
     }
 
     /**
-     * Движение фигуры вниз.
-     */
-    public void down() {
-        y++;
-        if (!isCurrentPositionAvailable()) {
-            y--;
-        }
-    }
-
-    /**
-     * Движение фигуры вверх.
+     * Двигаем фигурку вверх.
+     * Используется, если фигурка залезла на занятые клетки.
      */
     public void up() {
         y--;
-        if (!isCurrentPositionAvailable()) {
-            y++;
-        }
     }
 
     /**
-     * Метод поворачивает фигуру.
+     * Двигаем фигурку вниз.
      */
-    public void rotate() {
-
+    public void down() {
+        y++;
     }
 
     /**
-     * Падение фигуры вниз до дна.
+     * Двигаем фигурку вниз до тех пор, пока не залезем на кого-нибудь.
      */
     public void downMaximum() {
+        while (isCurrentPositionAvailable()) {
+            y++;
+        }
 
+        y--;
     }
 
     /**
-     * Метод проверяет, может ли фигуры быть помещена в текущую позицию.
-     * @return Может ли фигура помещена в текущую позицию.
+     * Проверяем - может ли фигурка находится на текущей позиции:
+     * а) не выходит ли она за границы поля
+     * б) не заходит ли она на занятые клетки
      */
     public boolean isCurrentPositionAvailable() {
+        Field field = Tetris.game.getField();
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (matrix[i][j] == 1) {
+                    if (y + i >= field.getHeight())
+                        return false;
+
+                    Integer value = field.getValue(x + j, y + i);
+                    if (value == null || value == 1)
+                        return false;
+                }
+            }
+        }
+
         return true;
     }
 
     /**
-     * Метод вызывается, когда фигурка
-     * достигла дна или уперлась в другую фигуру.
+     * Приземляем фигурку - добавляем все ее непустые клетки к клеткам поля.
      */
     public void landed() {
+        Field field = Tetris.game.getField();
 
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (matrix[i][j] == 1)
+                    field.setValue(x + j, y + i, 1);
+            }
+        }
     }
 }

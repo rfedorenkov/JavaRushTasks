@@ -43,17 +43,14 @@ public class KeyboardObserver extends Thread {
 
         frame.addKeyListener(new KeyListener() {
 
-            @Override
             public void keyTyped(KeyEvent e) {
                 //do nothing
             }
 
-            @Override
             public void keyReleased(KeyEvent e) {
                 //do nothing
             }
 
-            @Override
             public void keyPressed(KeyEvent e) {
                 keyEvents.add(e);
             }
