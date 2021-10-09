@@ -1,29 +1,26 @@
 package com.javarush.task.task25.task2515;
 
 /**
- * Класс бомбы.
+ * Класс для бомбы.
  */
 public class Bomb extends BaseObject {
+    public Bomb(double x, double y) {
+        super(x, y, 1);
+    }
 
     /**
-     * Конструктор объекта.
-     * При создании устанавливается параметр isAlive = true.
-     *
-     * @param x      Координата 'x'
-     * @param y      Координата 'y'
-     * @param radius Радиус
+     * Отрисовываем себя на холсте.
      */
-    public Bomb(double x, double y, double radius) {
-        super(x, y, radius);
-    }
-
     @Override
     public void draw(Canvas canvas) {
-
+        canvas.setPoint(x, y, 'B');
     }
 
+    /**
+     * Двигаем себя вниз на один ход.
+     */
     @Override
     public void move() {
-
+        y++;
     }
 }

@@ -8,6 +8,8 @@ import java.util.List;
  * Главный класс.
  */
 public class Space {
+    public static Space game;
+
     // Ширины
     private int width;
     // Высота
