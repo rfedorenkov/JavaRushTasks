@@ -42,14 +42,11 @@ public class MyMultiMap<K, V> extends HashMap<K, V> implements Cloneable, Serial
     public V remove(Object key) {
         if (containsKey(key)) {
             final List<V> list = map.get(key);
-            if (!list.isEmpty()) {
-                final V oldValue = list.remove(0);
-                if (list.isEmpty()) {
-                    map.remove(key);
-                }
-                return oldValue;
+            final V oldValue = list.remove(0);
+            if (list.isEmpty()) {
+                map.remove(key);
             }
-            map.remove(key);
+            return oldValue;
         }
         return null;
     }
