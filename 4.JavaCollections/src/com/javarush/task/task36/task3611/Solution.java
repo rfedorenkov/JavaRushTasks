@@ -1,6 +1,5 @@
 package com.javarush.task.task36.task3611;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
