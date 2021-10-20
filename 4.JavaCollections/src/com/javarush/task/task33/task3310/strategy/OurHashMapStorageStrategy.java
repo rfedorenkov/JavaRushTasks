@@ -114,7 +114,6 @@ public class OurHashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public boolean containsValue(String value) {
-
         return getKey(value) != null;
     }
 

@@ -57,16 +57,17 @@ public class Solution {
         long result = new Date().getTime() - start.getTime();
         Helper.printMessage(String.valueOf(result));
 
-        start = new Date();
-        Set<String> testKeys = getStrings(shortener, testIds);
-        result = new Date().getTime() - start.getTime();
-        Helper.printMessage(String.valueOf(result));
+//        start = new Date();
+//        Set<String> testKeys = getStrings(shortener, testIds);
+//        result = new Date().getTime() - start.getTime();
+//        Helper.printMessage(String.valueOf(result));
 
-        Helper.printMessage(testSet.containsAll(testKeys) ? "Тест пройден." : "Тест не пройден.");
+//        Helper.printMessage(testSet.containsAll(testKeys) ? "Тест пройден." : "Тест не пройден.");
     }
 
     public static void main(String[] args) {
-//        testStrategy(new HashMapStorageStrategy(), 10_000);
-//        testStrategy(new OurHashMapStorageStrategy(), 10_000);
+        testStrategy(new HashMapStorageStrategy(), 10_000);
+        testStrategy(new OurHashMapStorageStrategy(), 10_000);
+        testStrategy(new FileStorageStrategy(), 100);
     }
 }
