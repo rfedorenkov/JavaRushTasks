@@ -7,6 +7,8 @@ import java.util.Objects;
  * Класс сущности для стратегии OurHashMapStorageStrategy.
  */
 public class Entry implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     Long key;
     String value;
     Entry next;
