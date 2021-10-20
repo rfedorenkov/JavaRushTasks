@@ -1,15 +1,9 @@
 package com.javarush.task.task33.task3310.strategy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Класс стратегии основанный на HashMap.
+ * Класс стратегии основанный на собственной реализации HashMap.
  */
-public class HashMapStorageStrategy implements StorageStrategy {
-
-    private HashMap<Long, String> data = new HashMap<>();
-
+public class OurHashMapStorageStrategy implements StorageStrategy {
     /**
      * Метод должен вернуть true, если хранилище содержит переданный ключ.
      *
@@ -18,7 +12,7 @@ public class HashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public boolean containsKey(Long key) {
-        return data.containsKey(key);
+        return false;
     }
 
     /**
@@ -29,7 +23,7 @@ public class HashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public boolean containsValue(String value) {
-        return data.containsValue(value);
+        return false;
     }
 
     /**
@@ -40,7 +34,7 @@ public class HashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public void put(Long key, String value) {
-        data.put(key, value);
+
     }
 
     /**
@@ -51,11 +45,7 @@ public class HashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public Long getKey(String value) {
-        return data.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(value))
-                .findFirst()
-                .map(Map.Entry::getKey)
-                .orElse(null);
+        return null;
     }
 
     /**
@@ -66,7 +56,6 @@ public class HashMapStorageStrategy implements StorageStrategy {
      */
     @Override
     public String getValue(Long key) {
-        return data.get(key);
+        return null;
     }
 }
-
