@@ -5,7 +5,7 @@ import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 public class DualHashBidiMapStorageStrategy implements StorageStrategy {
 
     private DualHashBidiMap<Long, String> data = new DualHashBidiMap<>();
-    
+
     /**
      * Метод должен вернуть true, если хранилище содержит переданный ключ.
      *
