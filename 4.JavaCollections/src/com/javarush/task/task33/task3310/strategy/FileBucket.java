@@ -1,5 +1,6 @@
 package com.javarush.task.task33.task3310.strategy;
 
+import com.javarush.task.task33.task3310.ExceptionHandler;
 import com.javarush.task.task33.task3310.Helper;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class FileBucket {
             path.toFile().deleteOnExit();
             Files.createFile(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.log(e);
         }
     }
 
@@ -41,6 +42,7 @@ public class FileBucket {
         try {
             return Files.size(path);
         } catch (IOException e) {
+            ExceptionHandler.log(e);
             throw new RuntimeException(e);
         }
     }
@@ -56,7 +58,7 @@ public class FileBucket {
                 oos.writeObject(entry);
             } while ((entry = entry.next) != null);
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.log(e);
         }
     }
 
@@ -73,6 +75,7 @@ public class FileBucket {
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(path))) {
             return (Entry) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
+            ExceptionHandler.log(e);
             throw new RuntimeException(e);
         }
     }
@@ -84,7 +87,7 @@ public class FileBucket {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            ExceptionHandler.log(e);
         }
     }
 }
