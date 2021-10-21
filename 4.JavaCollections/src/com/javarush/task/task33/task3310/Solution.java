@@ -71,5 +71,6 @@ public class Solution {
         testStrategy(new FileStorageStrategy(), 100);
         testStrategy(new OurHashBiMapStorageStrategy(), 100_000);
         testStrategy(new HashBiMapStorageStrategy(), 100_000);
+        testStrategy(new DualHashBidiMapStorageStrategy(), 100_000);
     }
 }
