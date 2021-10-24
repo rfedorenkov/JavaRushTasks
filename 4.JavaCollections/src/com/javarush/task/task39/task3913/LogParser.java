@@ -1,5 +1,6 @@
 package com.javarush.task.task39.task3913;
 
+import com.javarush.task.task39.task3913.query.DateQuery;
 import com.javarush.task.task39.task3913.query.IPQuery;
 import com.javarush.task.task39.task3913.query.UserQuery;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Класс читает лог-файл и отображает нужную информацию.
  */
-public class LogParser implements IPQuery, UserQuery {
+public class LogParser implements IPQuery, UserQuery, DateQuery {
 
     private final List<Entity> entityList = new ArrayList<>();
 
@@ -185,11 +186,11 @@ public class LogParser implements IPQuery, UserQuery {
     }
 
     /**
-     * Метод возвращает пользователей, которые сделали Login.
+     * Метод возвращает пользователей, которые сделали LOGIN.
      *
      * @param after  Дата до.
      * @param before Дата после.
-     * @return Множество пользователей, которые сделали Login.
+     * @return Множество пользователей, которые сделали LOGIN.
      */
     @Override
     public Set<String> getLoggedUsers(Date after, Date before) {
@@ -297,6 +298,154 @@ public class LogParser implements IPQuery, UserQuery {
                 .filter(entity -> entity.getEvent() == Event.DONE_TASK)
                 .filter(entity -> entity.getTaskNumber() == task)
                 .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает даты, когда определенный пользователь произвел определенное событие.
+     *
+     * @param user   Пользователь.
+     * @param event  Событие.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Даты, когда пользователь произвел определенное событие.
+     */
+    @Override
+    public Set<Date> getDatesForUserAndEvent(String user, Event event, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == event)
+                .map(Entity::getDate)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает даты, когда любое событие не выполнилось (Status.FAILED).
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Даты, когда событие не выполнилось.
+     */
+    @Override
+    public Set<Date> getDatesWhenSomethingFailed(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getStatus() == Status.FAILED)
+                .map(Entity::getDate)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает даты, когда любое событие закончилось ошибкой (Status.ERROR)
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Даты, когда событие завершилось ошибкой.
+     */
+    @Override
+    public Set<Date> getDatesWhenErrorHappened(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getStatus() == Status.ERROR)
+                .map(Entity::getDate)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает дату, когда пользователь выполнил LOGIN впервые за указанный период.
+     * Если такой даты нет - null.
+     *
+     * @param user   Пользователь.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Дата, когда пользователь выполнил LOGIN в указанный период.
+     */
+    @Override
+    public Date getDateWhenUserLoggedFirstTime(String user, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == Event.LOGIN)
+                .map(Entity::getDate)
+                .min(Date::compareTo).orElse(null);
+    }
+
+    /**
+     * Метод возвращает дату, когда пользователь впервые попытался решить определенную задачу.
+     * Если такой даты нет - null.
+     *
+     * @param user   Пользователь.
+     * @param task   Номер задачи.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Возвращает дату задачи или null.
+     */
+    @Override
+    public Date getDateWhenUserSolvedTask(String user, int task, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == Event.SOLVE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .map(Entity::getDate)
+                .min(Date::compareTo).orElse(null);
+    }
+
+    /**
+     * Метод возвращает дату, когда пользователь решил определенную задачу.
+     * Если такой даты нет - null.
+     *
+     * @param user   Пользователь.
+     * @param task   Номер решенной задачи.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Возвращает дату решенной задачи или null.
+     */
+    @Override
+    public Date getDateWhenUserDoneTask(String user, int task, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == Event.DONE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .map(Entity::getDate)
+                .min(Date::compareTo).orElse(null);
+    }
+
+    /**
+     * Метод возвращает даты, когда пользователь написал сообщение.
+     *
+     * @param user   Пользователь.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Даты, когда пользователь написал сообщение.
+     */
+    @Override
+    public Set<Date> getDatesWhenUserWroteMessage(String user, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == Event.WRITE_MESSAGE)
+                .map(Entity::getDate)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает даты, когда пользователь скачал плагин.
+     *
+     * @param user   Пользователь.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Даты, когда пользователь скачал плагин.
+     */
+    @Override
+    public Set<Date> getDatesWhenUserDownloadedPlugin(String user, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .filter(entity -> entity.getEvent() == Event.DOWNLOAD_PLUGIN)
+                .map(Entity::getDate)
                 .collect(Collectors.toSet());
     }
 
