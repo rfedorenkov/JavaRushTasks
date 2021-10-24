@@ -1,6 +1,7 @@
 package com.javarush.task.task39.task3913;
 
 import com.javarush.task.task39.task3913.query.IPQuery;
+import com.javarush.task.task39.task3913.query.UserQuery;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Класс читает лог-файл и отображает нужную информацию.
  */
-public class LogParser implements IPQuery {
+public class LogParser implements IPQuery, UserQuery {
 
     private final List<Entity> entityList = new ArrayList<>();
 
@@ -53,13 +54,10 @@ public class LogParser implements IPQuery {
      */
     @Override
     public Set<String> getUniqueIPs(Date after, Date before) {
-        Set<String> set = new HashSet<>();
-        for (Entity entity : entityList) {
-            if (filterDate(entity.getDate, after, before)) {
-                set.add(entity.getIp());
-            }
-        }
-        return set;
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .map(Entity::getIp)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -75,15 +73,11 @@ public class LogParser implements IPQuery {
      */
     @Override
     public Set<String> getIPsForUser(String user, Date after, Date before) {
-        Set<String> set = new HashSet<>();
-        for (Entity entity : entityList) {
-            if (entity.getName().equals(user)) {
-                if (filterDate(entity.getDate(), after, before)) {
-                    set.add(entity.getIp());
-                }
-            }
-        }
-        return set;
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate(), after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .map(Entity::getIp)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -99,15 +93,11 @@ public class LogParser implements IPQuery {
      */
     @Override
     public Set<String> getIPsForEvent(Event event, Date after, Date before) {
-        Set<String> set = new HashSet<>();
-        for (Entity entity : entityList) {
-            if (entity.getEvent() == event) {
-                if (filterDate(entity.getDate(), after, before)) {
-                    set.add(entity.getIp());
-                }
-            }
-        }
-        return set;
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate(), after, before))
+                .filter(entity -> entity.getEvent() == event)
+                .map(Entity::getIp)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -123,16 +113,193 @@ public class LogParser implements IPQuery {
      */
     @Override
     public Set<String> getIPsForStatus(Status status, Date after, Date before) {
-        Set<String> set = new HashSet<>();
-        for (Entity entity : entityList) {
-            if (entity.getStatus() == status) {
-                if (filterDate(entity.getDate, after, before)) {
-                    set.add(entity.getIp());
-                }
-            }
-        }
-        return set;
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getStatus() == status)
+                .map(Entity::getIp)
+                .collect(Collectors.toSet());
     }
+
+    /**
+     * Метод возвращает всех пользователей.
+     *
+     * @return Пользователь
+     */
+    @Override
+    public Set<String> getAllUsers() {
+        return entityList.stream()
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает количество уникальных пользователей.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Количество уникальных пользователей.
+     */
+    @Override
+    public int getNumberOfUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .map(Entity::getName)
+                .collect(Collectors.toSet())
+                .size();
+    }
+
+    /**
+     * Метод возвращает количество уникальных событий от определенного пользователя.
+     *
+     * @param user   Пользователь.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Количество уникальных событий от определенного пользователя.
+     */
+    @Override
+    public int getNumberOfUserEvents(String user, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate(), after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet())
+                .size();
+    }
+
+    /**
+     * Метод возвращает пользователей с определенным IP.
+     * Несколько пользователей могут использовать один и тот же IP.
+     *
+     * @param ip     IP адрес.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей с определенным IP.
+     */
+    @Override
+    public Set<String> getUsersForIP(String ip, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate(), after, before))
+                .filter(entity -> entity.getIp().equals(ip))
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые сделали Login.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей, которые сделали Login.
+     */
+    @Override
+    public Set<String> getLoggedUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.LOGIN)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые скачали плагин.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей, которые скачали плагин.
+     */
+    @Override
+    public Set<String> getDownloadedPluginUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.DOWNLOAD_PLUGIN)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые отправили сообщение.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей, которые отправили сообщение.
+     */
+    @Override
+    public Set<String> getWroteMessageUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.WRITE_MESSAGE)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые решали любую задачу.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей, которые решали любую задачу.
+     */
+    @Override
+    public Set<String> getSolvedTaskUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.SOLVE_TASK)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые решали задачу с номером task.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @param task   Номер задачи.
+     * @return Множество пользователей, которые решали задачу с номером task.
+     */
+    @Override
+    public Set<String> getSolvedTaskUsers(Date after, Date before, int task) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.SOLVE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые решили любую задачу.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Множество пользователей, которые решили любую задачу.
+     */
+    @Override
+    public Set<String> getDoneTaskUsers(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.DONE_TASK)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает пользователей, которые решили задачу с номером task.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @param task   Номер задачи.
+     * @return Множество пользователей, которые решили задачу с номером task.
+     */
+    @Override
+    public Set<String> getDoneTaskUsers(Date after, Date before, int task) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.DONE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .map(Entity::getName)
+                .collect(Collectors.toSet());
+    }
+
 
     private void init(Path logDir) {
         List<String> logs = loadData(logDir);
@@ -187,10 +354,13 @@ public class LogParser implements IPQuery {
         String name = split[1];
         Date date = parseStringForDate(split[2]);
         String event = split[3];
+        int taskNumber = 0;
         if (event.contains("DONE_TASK") || event.contains("SOLVE_TASK")) {
-            event = event.split(" ")[0];
+            String[] eventData = event.split(" ");
+            event = eventData[0];
+            taskNumber = Integer.parseInt(eventData[1]);
         }
-        return new Entity(ip, name, date, Event.valueOf(event), Status.valueOf(split[4]));
+        return new Entity(ip, name, date, Event.valueOf(event), Status.valueOf(split[4]), taskNumber);
     }
 
     public static class Entity {
@@ -199,13 +369,15 @@ public class LogParser implements IPQuery {
         private final Date getDate;
         private final Event event;
         private final Status status;
+        private final int taskNumber;
 
-        public Entity(String ip, String name, Date date, Event event, Status status) {
+        public Entity(String ip, String name, Date date, Event event, Status status, int taskNumber) {
             this.ip = ip;
             this.name = name;
             this.getDate = date;
             this.event = event;
             this.status = status;
+            this.taskNumber = taskNumber;
         }
 
         public String getIp() {
@@ -226,6 +398,10 @@ public class LogParser implements IPQuery {
 
         public Status getStatus() {
             return status;
+        }
+
+        public int getTaskNumber() {
+            return taskNumber;
         }
 
         @Override
