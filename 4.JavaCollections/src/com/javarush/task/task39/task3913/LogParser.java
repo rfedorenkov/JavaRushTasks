@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class LogParser implements IPQuery {
 
-    private List<Entity> entityList = new ArrayList<>();
+    private final List<Entity> entityList = new ArrayList<>();
 
     /**
      * Конструктор LogParser.
@@ -55,8 +55,8 @@ public class LogParser implements IPQuery {
     public Set<String> getUniqueIPs(Date after, Date before) {
         Set<String> set = new HashSet<>();
         for (Entity entity : entityList) {
-            if (filterDate(entity.date, after, before)) {
-                set.add(entity.ip);
+            if (filterDate(entity.getDate, after, before)) {
+                set.add(entity.getIp());
             }
         }
         return set;
@@ -77,9 +77,9 @@ public class LogParser implements IPQuery {
     public Set<String> getIPsForUser(String user, Date after, Date before) {
         Set<String> set = new HashSet<>();
         for (Entity entity : entityList) {
-            if (entity.name.equals(user)) {
-                if (filterDate(entity.date, after, before)) {
-                    set.add(entity.ip);
+            if (entity.getName().equals(user)) {
+                if (filterDate(entity.getDate(), after, before)) {
+                    set.add(entity.getIp());
                 }
             }
         }
@@ -101,9 +101,9 @@ public class LogParser implements IPQuery {
     public Set<String> getIPsForEvent(Event event, Date after, Date before) {
         Set<String> set = new HashSet<>();
         for (Entity entity : entityList) {
-            if (entity.event == event) {
-                if (filterDate(entity.date, after, before)) {
-                    set.add(entity.ip);
+            if (entity.getEvent() == event) {
+                if (filterDate(entity.getDate(), after, before)) {
+                    set.add(entity.getIp());
                 }
             }
         }
@@ -125,9 +125,9 @@ public class LogParser implements IPQuery {
     public Set<String> getIPsForStatus(Status status, Date after, Date before) {
         Set<String> set = new HashSet<>();
         for (Entity entity : entityList) {
-            if (entity.status == status) {
-                if (filterDate(entity.date, after, before)) {
-                    set.add(entity.ip);
+            if (entity.getStatus() == status) {
+                if (filterDate(entity.getDate, after, before)) {
+                    set.add(entity.getIp());
                 }
             }
         }
@@ -196,14 +196,14 @@ public class LogParser implements IPQuery {
     public static class Entity {
         private final String ip;
         private final String name;
-        private final Date date;
+        private final Date getDate;
         private final Event event;
         private final Status status;
 
         public Entity(String ip, String name, Date date, Event event, Status status) {
             this.ip = ip;
             this.name = name;
-            this.date = date;
+            this.getDate = date;
             this.event = event;
             this.status = status;
         }
@@ -217,7 +217,7 @@ public class LogParser implements IPQuery {
         }
 
         public Date getDate() {
-            return date;
+            return getDate;
         }
 
         public Event getEvent() {
@@ -233,7 +233,7 @@ public class LogParser implements IPQuery {
             return "Entity{" +
                     "ip='" + ip + '\'' +
                     ", name='" + name + '\'' +
-                    ", date=" + date +
+                    ", date=" + getDate +
                     ", event=" + event +
                     ", status=" + status +
                     '}';
