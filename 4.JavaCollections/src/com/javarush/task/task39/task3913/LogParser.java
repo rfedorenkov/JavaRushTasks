@@ -1,6 +1,7 @@
 package com.javarush.task.task39.task3913;
 
 import com.javarush.task.task39.task3913.query.DateQuery;
+import com.javarush.task.task39.task3913.query.EventQuery;
 import com.javarush.task.task39.task3913.query.IPQuery;
 import com.javarush.task.task39.task3913.query.UserQuery;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Класс читает лог-файл и отображает нужную информацию.
  */
-public class LogParser implements IPQuery, UserQuery, DateQuery {
+public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
 
     private final List<Entity> entityList = new ArrayList<>();
 
@@ -447,6 +448,163 @@ public class LogParser implements IPQuery, UserQuery, DateQuery {
                 .filter(entity -> entity.getEvent() == Event.DOWNLOAD_PLUGIN)
                 .map(Entity::getDate)
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает количество событий за указанный период.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Количество событий за указанный период.
+     */
+    @Override
+    public int getNumberOfAllEvents(Date after, Date before) {
+        return getAllEvents(after, before).size();
+    }
+
+    /**
+     * Метод возвращает все события за указанный период.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return События за указанный период.
+     */
+    @Override
+    public Set<Event> getAllEvents(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает события, которые происходили с указанного IP.
+     *
+     * @param ip     IP адрес.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return События за указанный период с определенного IP.
+     */
+    @Override
+    public Set<Event> getEventsForIP(String ip, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getIp().equals(ip))
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает события, которые инициировал определенный пользователь.
+     *
+     * @param user   Пользователь.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return События за указанный период определенного пользователя.
+     */
+    @Override
+    public Set<Event> getEventsForUser(String user, Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getName().equals(user))
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает события, которые не выполнились.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return События, которые не выполнились.
+     */
+    @Override
+    public Set<Event> getFailedEvents(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getStatus() == Status.FAILED)
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает события, которые завершились ошибкой.
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return События, которые завершились ошибкой.
+     */
+    @Override
+    public Set<Event> getErrorEvents(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getStatus() == Status.ERROR)
+                .map(Entity::getEvent)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Метод возвращает количество попыток решить определенную задачу.
+     *
+     * @param task   Номер задачи.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Количество попыток решить определенную задачу.
+     */
+    @Override
+    public int getNumberOfAttemptToSolveTask(int task, Date after, Date before) {
+        return (int) entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.SOLVE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .count();
+    }
+
+    /**
+     * Метод возвращает количество успешных решений определенной задачи.
+     *
+     * @param task   Номер задачи.
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Количество успешных решений определенной задачи.
+     */
+    @Override
+    public int getNumberOfSuccessfulAttemptToSolveTask(int task, Date after, Date before) {
+        return (int) entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.DONE_TASK)
+                .filter(entity -> entity.getTaskNumber() == task)
+                .count();
+    }
+
+    /**
+     * Метод возвращает Map (номер_задачи : количество_попыток_решить_ее).
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Map (номер_задачи : количество_попыток_решить_ее)
+     */
+    @Override
+    public Map<Integer, Integer> getAllSolvedTasksAndTheirNumber(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.SOLVE_TASK)
+                .collect(Collectors.toMap(Entity::getTaskNumber, entity -> 1, Integer::sum));
+    }
+
+    /**
+     * Метод возвращает Map (номер_задачи : сколько_раз_ее_решили).
+     *
+     * @param after  Дата до.
+     * @param before Дата после.
+     * @return Map (номер_задачи : сколько_раз_ее_решили)
+     */
+    @Override
+    public Map<Integer, Integer> getAllDoneTasksAndTheirNumber(Date after, Date before) {
+        return entityList.stream()
+                .filter(entity -> filterDate(entity.getDate, after, before))
+                .filter(entity -> entity.getEvent() == Event.DONE_TASK)
+                .collect(Collectors.toMap(Entity::getTaskNumber, entity -> 1, Integer::sum));
     }
 
 
