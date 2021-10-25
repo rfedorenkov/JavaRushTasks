@@ -1,9 +1,6 @@
 package com.javarush.task.task39.task3913;
 
-import com.javarush.task.task39.task3913.query.DateQuery;
-import com.javarush.task.task39.task3913.query.EventQuery;
-import com.javarush.task.task39.task3913.query.IPQuery;
-import com.javarush.task.task39.task3913.query.UserQuery;
+import com.javarush.task.task39.task3913.query.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Класс читает лог-файл и отображает нужную информацию.
  */
-public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
+public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery, QLQuery {
 
     private final List<Entity> entityList = new ArrayList<>();
 
@@ -607,7 +604,40 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
                 .collect(Collectors.toMap(Entity::getTaskNumber, entity -> 1, Integer::sum));
     }
 
+    /**
+     * Метод обрабатывает запросы:
+     * get ip
+     * get user
+     * get date
+     * get event
+     * get status
+     *
+     * @param query Строка запросов.
+     * @return Возвращает данные запроса.
+     */
+    @Override
+    public Set<Object> execute(String query) {
+        switch (query.split(" ")[1]) {
+            case "ip":
+                return new HashSet<>(getUniqueIPs(null, null));
+            case "user":
+                return new HashSet<>(getAllUsers());
+            case "date":
+                return entityList.stream().map(Entity::getDate).collect(Collectors.toSet());
+            case "event":
+                return new HashSet<>(getAllEvents(null, null));
+            case "status":
+                return entityList.stream().map(Entity::getStatus).collect(Collectors.toSet());
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 
+    /**
+     * Метод инициализации.
+     *
+     * @param logDir Директория, в которой находятся log-файлы.
+     */
     private void init(Path logDir) {
         List<String> logs = loadData(logDir);
 
@@ -617,6 +647,12 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
 
     }
 
+    /**
+     * Метод загружает из директории log-файлы и сохраняет в список.
+     *
+     * @param logDir Директория, в которой находятся log-файлы.
+     * @return Список строк, загруженных из log-файлов.
+     */
     private List<String> loadData(Path logDir) {
         try {
             List<Path> collect = Files.list(logDir)
@@ -632,6 +668,12 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
         }
     }
 
+    /**
+     * Метод принимает строку, парсит и сохраняет в объект Date.
+     *
+     * @param date Строка с датой.
+     * @return Возвращает дату.
+     */
     private Date parseStringForDate(String date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         try {
@@ -641,6 +683,14 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
         }
     }
 
+    /**
+     * Метод проверяет, что текущая дата находится во временном промежутке.
+     *
+     * @param currentDate Текущая дата.
+     * @param after       Дата после.
+     * @param before      Дата до.
+     * @return true - если текущая дата находится в указанном временном промежутке, иначе - false.
+     */
     private boolean filterDate(Date currentDate, Date after, Date before) {
         boolean isAfter = true;
         if (after != null) {
@@ -655,6 +705,12 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
         return isAfter && isBefore;
     }
 
+    /**
+     * Метод создает из переданной строки log-файла сущность.
+     *
+     * @param data Строка из log-файла.
+     * @return Возвращает сущность.
+     */
     private Entity createEntity(String data) {
         String[] split = data.split("\t");
         String ip = split[0];
@@ -670,6 +726,9 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery {
         return new Entity(ip, name, date, Event.valueOf(event), Status.valueOf(split[4]), taskNumber);
     }
 
+    /**
+     * Внутренний класс сущности log-файла.
+     */
     public static class Entity {
         private final String ip;
         private final String name;
