@@ -606,28 +606,119 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery, QLQ
 
     /**
      * Метод обрабатывает запросы:
-     * get ip
+     * Примеры:
      * get user
-     * get date
-     * get event
-     * get status
+     * get date for event
+     * get ip for user = "[any_user]" and date between "[after]" and "[before]"
      *
      * @param query Строка запросов.
      * @return Возвращает данные запроса.
      */
     @Override
     public Set<Object> execute(String query) {
-        switch (query.split(" ")[1]) {
+        if (query.split(" ").length <= 2) {
+            return getSetForDefaultAction(query.split(" ")[1]);
+        }
+
+        String[] split = query.split("=");
+        String[] data = split[0].split(" ");
+        String field1 = data[1];
+        String field2 = data[3];
+        String value = split[1].replaceAll("\"", "").trim();
+        Date after = null;
+        Date before = null;
+
+        if (query.contains("and")) {
+            data = query.split("and");
+            value = data[0].split("=")[1].replaceAll("\"", "").trim();
+            after = parseStringForDate(data[1].split("\"")[1]);
+            before = parseStringForDate(data[2].replaceAll("\"", ""));
+        }
+
+        return getSetForExecute(field1, field2, value, after, before);
+    }
+
+    private Set<Object> getSetForDefaultAction(String action) {
+        switch (action) {
             case "ip":
-                return new HashSet<>(getUniqueIPs(null, null));
+                return entityList.stream()
+                        .map(Entity::getIp)
+                        .collect(Collectors.toSet());
             case "user":
-                return new HashSet<>(getAllUsers());
+                return entityList.stream()
+                        .map(Entity::getName)
+                        .collect(Collectors.toSet());
             case "date":
-                return entityList.stream().map(Entity::getDate).collect(Collectors.toSet());
+                return entityList.stream()
+                        .map(Entity::getDate)
+                        .collect(Collectors.toSet());
             case "event":
-                return new HashSet<>(getAllEvents(null, null));
+                return entityList.stream()
+                        .map(Entity::getEvent)
+                        .collect(Collectors.toSet());
             case "status":
-                return entityList.stream().map(Entity::getStatus).collect(Collectors.toSet());
+                return entityList.stream()
+                        .map(Entity::getStatus)
+                        .collect(Collectors.toSet());
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private Set<Entity> getEntitySetForAction(String action, String value) {
+        switch (action) {
+            case "ip":
+                return entityList.stream()
+                        .filter(entity -> entity.getIp().equals(value))
+                        .collect(Collectors.toSet());
+            case "user":
+                return entityList.stream()
+                        .filter(entity -> entity.getName().equals(value))
+                        .collect(Collectors.toSet());
+            case "event":
+                return entityList.stream()
+                        .filter(entity -> entity.getEvent() == Event.valueOf(value))
+                        .collect(Collectors.toSet());
+            case "date":
+                return entityList.stream()
+                        .filter(entity -> entity.getDate.equals(parseStringForDate(value)))
+                        .collect(Collectors.toSet());
+            case "status":
+                return entityList.stream()
+                        .filter(entity -> entity.getStatus() == Status.valueOf(value))
+                        .collect(Collectors.toSet());
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    private Set<Object> getSetForExecute(String field1, String field2, String value, Date after, Date before) {
+        switch (field1) {
+            case "ip":
+                return getEntitySetForAction(field2, value).stream()
+                        .filter(entity -> filterDate(entity.getDate(), after, before))
+                        .map(Entity::getIp)
+                        .collect(Collectors.toSet());
+            case "user":
+                return getEntitySetForAction(field2, value).stream()
+                        .filter(entity -> filterDate(entity.getDate(), after, before))
+                        .map(Entity::getName)
+                        .collect(Collectors.toSet());
+            case "date":
+                return getEntitySetForAction(field2, value).stream()
+                        .map(Entity::getDate)
+                        .filter(date -> filterDate(date, after, before))
+                        .collect(Collectors.toSet());
+            case "event":
+                return getEntitySetForAction(field2, value).stream()
+                        .filter(entity -> filterDate(entity.getDate(), after, before))
+                        .map(Entity::getEvent)
+                        .collect(Collectors.toSet());
+            case "status":
+                return getEntitySetForAction(field2, value).stream()
+                        .filter(entity -> filterDate(entity.getDate(), after, before))
+                        .map(Entity::getStatus)
+                        .collect(Collectors.toSet());
             default:
                 throw new IllegalArgumentException();
         }
@@ -639,12 +730,9 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery, QLQ
      * @param logDir Директория, в которой находятся log-файлы.
      */
     private void init(Path logDir) {
-        List<String> logs = loadData(logDir);
-
-        for (String log : logs) {
-            entityList.add(createEntity(log));
-        }
-
+        loadData(logDir).stream()
+                .map(this::createEntity)
+                .forEach(entityList::add);
     }
 
     /**
@@ -692,17 +780,10 @@ public class LogParser implements IPQuery, UserQuery, DateQuery, EventQuery, QLQ
      * @return true - если текущая дата находится в указанном временном промежутке, иначе - false.
      */
     private boolean filterDate(Date currentDate, Date after, Date before) {
-        boolean isAfter = true;
-        if (after != null) {
-            isAfter = (currentDate.after(after) || currentDate.equals(after));
-        }
+        after = after != null ? after : new Date(0);
+        before = before != null ? before : new Date(Long.MAX_VALUE);
 
-        boolean isBefore = true;
-        if (before != null) {
-            isBefore = (currentDate.before(before) || currentDate.equals(before));
-        }
-
-        return isAfter && isBefore;
+        return currentDate.after(after) && currentDate.before(before);
     }
 
     /**
