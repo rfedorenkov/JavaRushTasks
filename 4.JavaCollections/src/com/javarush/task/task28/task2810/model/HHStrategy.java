@@ -20,12 +20,14 @@ public class HHStrategy implements Strategy {
     @Override
     public List<Vacancy> getVacancies(String searchString) {
         try {
-            Document document = Jsoup.connect(String.format(URL_FORMAT, "Moscow", 0)).get();
+            Document document = Jsoup.connect(String.format(URL_FORMAT, "Moscow", 0))
+                    .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Safari/605.1.15")
+                    .referrer("https://grc.ua/")
+                    .get();
 //            System.out.println(document.html());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
     }
-
 }
