@@ -1,0 +1,44 @@
+common_en
+the.end=Terminated. Thank you for visiting JavaRush cash machine. Good luck.
+choose.operation=Please choose an operation desired or type 'EXIT' for exiting
+operation.INFO=INFO
+operation.DEPOSIT=DEPOSIT
+operation.WITHDRAW=WITHDRAW
+operation.EXIT=EXIT
+invalid.data=Please specify valid data.
+choose.currency.code=Please choose a currency code, for example USD
+choose.denomination.and.count.format=Please specify integer denomination and integer count. For example '10 3' means 30 %s
+
+deposit_en
+before=Depositing...
+success.format=%d %s was deposited successfully
+invalid.data=Please specify valid data.
+
+exit_en
+exit.question.y.n=Do you really want to exit? <y,n>
+thank.message=Thank you for visiting JavaRush cash machine. Good luck.
+
+info_en
+before=Information:
+no.money=No money available.
+
+login_en
+before=Logging in...
+specify.data=Please specify your credit card number and pin code or type 'EXIT' for exiting.
+success.format=Credit card [%s] is verified successfully!
+not.verified.format=Credit card [%s] is not verified.
+try.again.or.exit=Please try again or type 'EXIT' for urgent exiting
+try.again.with.details=Please specify valid credit card number - 12 digits, pin code - 4 digits.
+
+withdraw_en
+before=Withdrawing...
+success.format=%d %s was withdrawn successfully
+specify.amount=Please specify integer amount for withdrawing.
+specify.not.empty.amount=Please specify valid positive integer amount for withdrawing.
+not.enough.money=Not enough money on your account, please try again
+exact.amount.not.available=Exact amount is not available
+
+verifiedCards
+123456789012=1234
+234567890123=2345
+345678901234=3456
