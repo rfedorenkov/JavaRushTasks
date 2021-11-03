@@ -24,7 +24,8 @@ public class Solution {
     public static void main(String[] args) throws Exception {
         Solution solution = new Solution();
 //        solution.sendPost(new URL("http://requestb.in/1cse9qt1"), "name=zapp&mood=good&locale=&id=777");
-        solution.sendPost(new URL("https://en6fp7qq57e54.x.pipedream.net"), "name=zapp&mood=good&locale=&id=777");
+//        solution.sendPost(new URL("https://en6fp7qq57e54.x.pipedream.net"), "name=zapp&mood=good&locale=&id=777");
+        solution.sendPost(new URL("https://requestbin.jumio.com/14n7k3o1"), "name=zapp&mood=good&locale=&id=777");
     }
 
     public void sendPost(URL url, String urlParameters) throws Exception {
