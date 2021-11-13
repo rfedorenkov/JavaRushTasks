@@ -1,12 +1,12 @@
 package com.javarush.task.task34.task3410.view;
 
 import com.javarush.task.task34.task3410.controller.EventListener;
+import com.javarush.task.task34.task3410.model.*;
 import com.javarush.task.task34.task3410.model.Box;
-import com.javarush.task.task34.task3410.model.Home;
-import com.javarush.task.task34.task3410.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 public class Field extends JPanel {
     private View view;
@@ -22,12 +22,13 @@ public class Field extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-//        super.paint(g);
-//        Player player = new Player(100, 100);
-//        player.draw(g);
-//        Box box = new Box(200, 200);
-//        box.draw(g);
-//        Home home = new Home(150, 150);
-//        home.draw(g);
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 500, 500);
+
+        view.getGameObjects().getAll().forEach(gameObject -> gameObject.draw(g));
     }
 }
+
+
+////12.3.2. Получить у представления все игровые объекты.
+////12.3.3. Отрисовать все игровые объекты.

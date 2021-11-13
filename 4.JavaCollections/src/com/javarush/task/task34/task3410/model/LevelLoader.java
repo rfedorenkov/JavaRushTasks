@@ -13,10 +13,20 @@ public class LevelLoader {
         int x = Model.FIELD_CELL_SIZE / 2;
         int y = Model.FIELD_CELL_SIZE / 2;
         Set<Wall> walls = new HashSet<>();
+        x += 30;
+        y += 30;
         walls.add(new Wall(x, y));
+        x += 30;
+        y += 30;
         walls.add(new Wall(x, y));
+        x += 30;
+        y += 30;
         Set<Home> homes = Collections.singleton(new Home(x, y));
+        x += 30;
+        y += 30;
         Set<Box> boxes = Collections.singleton(new Box(x, y));
-        return new GameObjects(walls, boxes, homes,new Player(x, y));
+        x += 30;
+        y += 30;
+        return new GameObjects(walls, boxes, homes, new Player(x, y));
     }
 }
