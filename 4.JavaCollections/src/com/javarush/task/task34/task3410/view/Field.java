@@ -1,12 +1,14 @@
 package com.javarush.task.task34.task3410.view;
 
 import com.javarush.task.task34.task3410.controller.EventListener;
-import com.javarush.task.task34.task3410.model.*;
-import com.javarush.task.task34.task3410.model.Box;
+import com.javarush.task.task34.task3410.model.Direction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import static java.awt.event.KeyEvent.*;
 
 public class Field extends JPanel {
     private View view;
@@ -14,6 +16,8 @@ public class Field extends JPanel {
 
     public Field(View view) {
         this.view = view;
+        addKeyListener(new KeyHandler());
+        setFocusable(true);
     }
 
     public void setEventListener(EventListener eventListener) {
@@ -27,8 +31,24 @@ public class Field extends JPanel {
 
         view.getGameObjects().getAll().forEach(gameObject -> gameObject.draw(g));
     }
+
+    public class KeyHandler extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            if (keyCode == VK_LEFT) {
+                eventListener.move(Direction.LEFT);
+            } else if (keyCode == VK_RIGHT) {
+                eventListener.move(Direction.RIGHT);
+            } else if (keyCode == VK_UP) {
+                eventListener.move(Direction.UP);
+            } else if (keyCode == VK_DOWN) {
+                eventListener.move(Direction.DOWN);
+            } else if (keyCode == VK_R) {
+                eventListener.restart();
+            }
+            super.keyPressed(e);
+        }
+    }
 }
-
-
-////12.3.2. Получить у представления все игровые объекты.
-////12.3.3. Отрисовать все игровые объекты.
