@@ -2,11 +2,14 @@ package com.javarush.task.task34.task3410.view;
 
 import com.javarush.task.task34.task3410.controller.EventListener;
 import com.javarush.task.task34.task3410.model.Direction;
+import com.javarush.task.task34.task3410.model.GameObject;
+import com.javarush.task.task34.task3410.model.GameObjects;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Set;
 
 import static java.awt.event.KeyEvent.*;
 

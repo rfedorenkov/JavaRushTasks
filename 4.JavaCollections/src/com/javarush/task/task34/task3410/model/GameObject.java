@@ -55,4 +55,5 @@ public abstract class GameObject {
     }
 
     public abstract void draw(Graphics graphics);
+
 }
