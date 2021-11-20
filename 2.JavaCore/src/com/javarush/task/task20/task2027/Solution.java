@@ -21,7 +21,7 @@ import java.util.List;
  * 4. Метод detectAllWords должен быть статическим.
  * 5. Метод detectAllWords должен быть публичным.
  * 6. Метод detectAllWords должен возвращать список всех слов в кроссворде (согласно условию задачи).
-*/
+ */
 
 public class Solution {
     public static void main(String[] args) {
@@ -32,6 +32,7 @@ public class Solution {
                 {'m', 'l', 'p', 'r', 'r', 'h'},
                 {'p', 'o', 'e', 'e', 'j', 'j'}
         };
+
         detectAllWords(crossword, "home", "same");
         /*
 Ожидаемый результат
@@ -42,8 +43,49 @@ same - (1, 1) - (4, 1)
 
     public static List<Word> detectAllWords(int[][] crossword, String... words) {
         List<Word> list = new ArrayList<>();
+        for (String s : words) {
+            for (int j = 0; j < crossword.length; j++) {
+                for (int i = 0; i < crossword[j].length; i++) {
+                    if (s.charAt(0) == crossword[j][i]) {
+                        Word word = new Word(s);
+                        word.setStartPoint(i, j);
+                        if (wordFound(crossword, word)) {
+                            list.add(word);
+                        }
+                    }
+                }
+            }
+        }
         return list;
     }
+
+    public static boolean wordFound(int[][] crossword, Word word) {
+        word.setEndPoint(-1, 0);
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                recursiveWordSearch(crossword, word, word.startX, word.startY, x, y, 1);
+                if (word.endX != -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static void recursiveWordSearch(int[][] crossword, Word word, int startX, int startY, int x, int y, int charNumber) {
+        startX += x;
+        startY += y;
+        if (startY >= 0 && startX >= 0 && startY < crossword.length && startX < crossword[startY].length) {
+            if (crossword[startY][startX] == word.text.charAt(charNumber)) {
+                if (charNumber == word.text.length() - 1) {
+                    word.setEndPoint(startX, startY);
+                } else {
+                    recursiveWordSearch(crossword, word, startX, startY, x, y, ++charNumber);
+                }
+            }
+        }
+    }
+
 
     public static class Word {
         private String text;
