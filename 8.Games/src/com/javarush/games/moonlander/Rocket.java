@@ -1,10 +1,8 @@
 package com.javarush.games.moonlander;
 
-import com.javarush.engine.cell.*;
 import com.javarush.engine.cell.Color;
+import com.javarush.engine.cell.Game;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.javarush.games.moonlander.ShapeMatrix.*;
